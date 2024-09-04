@@ -1,0 +1,10 @@
+.navbar {
+    display: flex;
+    background-color: blanchedalmond;
+    align-items: center;
+    height: 2em;
+}
+
+.nav_items{
+    margin-left: 1em;
+}

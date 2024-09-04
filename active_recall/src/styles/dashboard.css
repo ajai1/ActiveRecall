@@ -1,0 +1,7 @@
+.dashboard_container {
+}
+
+.card_section{
+    display: flex;
+    justify-content: center;
+}
