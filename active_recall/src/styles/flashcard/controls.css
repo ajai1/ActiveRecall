@@ -1,0 +1,21 @@
+.canvas_controls_container{
+    display: flex;
+}
+
+.icon_container {
+    margin-left: 1em;
+    padding: 10px;
+    border-radius: 50%;
+}
+
+.icon_container:hover{
+    background-color: darkgray;
+}
+
+.icon_container_selected{
+    background-color: blanchedalmond;
+}
+
+.icon{
+    width: 1.75em;
+}

@@ -2,10 +2,13 @@ import React, { useState } from "react";
 
 import "../../styles/flashcard/flashcard.css";
 import { Canvas } from "./Canvas";
+import { CanvasControls } from "./CanvasControls";
+import { TextControls } from "./TextControls";
 
 export const Card = () => {
   const [canvasMode, setCanvasMode] = useState(false);
   const [clearCanvas, setClearCanvas] = useState(false);
+  const [eraserSelected, setEraserSelected] = useState(false);
   const [textAlign, setTextAlign] = useState("center");
 
   const handleTextAlign = () => {
@@ -23,7 +26,7 @@ export const Card = () => {
   return (
     <div className="flashcard_container">
       <input
-        style={{ textAlign: "center" }}
+        style={{ textAlign: "center", zIndex: canvasMode ? 0 : 1}}
         className="flashcard_header"
         type="text"
         placeholder="Enter the Header"
@@ -38,16 +41,16 @@ export const Card = () => {
         canvasMode={canvasMode}
         clearCanvas={clearCanvas}
         setClearCanvas={setClearCanvas}
+        eraserSelected={eraserSelected}
+        setEraserSelected={setEraserSelected}
       ></Canvas>
       <button onClick={() => setCanvasMode((prev) => !prev)}>
         {canvasMode ? "Canvas On" : "Canvas Off"}
       </button>
       {canvasMode ? (
-        <button onClick={() => setClearCanvas((prev) => !prev)}>
-          Clear Canvas
-        </button>
+        <CanvasControls setClearCanvas={setClearCanvas} setEraserSelected={setEraserSelected} eraserSelected={eraserSelected}/>
       ) : (
-        <button onClick={() => handleTextAlign()}>Aligned {textAlign}</button>
+       <TextControls handleTextAlign= {handleTextAlign} textAlign={textAlign}/>
       )}
     </div>
   );

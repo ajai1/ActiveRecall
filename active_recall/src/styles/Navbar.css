@@ -1,8 +1,9 @@
 .navbar {
     display: flex;
-    background-color: blanchedalmond;
+    background-color: #2D527C;
     align-items: center;
     height: 2em;
+    color: white;
 }
 
 .nav_items{
