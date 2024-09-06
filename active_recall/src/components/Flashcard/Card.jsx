@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -9,9 +9,12 @@ import { CardCreatorContext } from "../../contexts/card-creator-context";
 import { Editor } from "./RichTextEditor/Editor";
 
 export const Card = () => {
-  const { canvasMode, clearCanvas, eraserSelected } =
+  const { canvasMode, clearCanvas, eraserSelected, setCardTextContent } =
     useContext(CardCreatorContext);
   const { setClearCanvas, setEraserSelected } = useContext(CardCreatorContext);
+
+
+  console.log("CARD LOADED --------------------------------- ")
 
   return (
     <div className="flashcard_container">

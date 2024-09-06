@@ -94,8 +94,6 @@ export const Canvas = ({}) => {
   //Event Handlers ################################################################################################
 
   const handleTouchStart = (e) => {
-    e.preventDefault();
-
     if (canvasMode == false) return;
     const touch = e.touches[0];
     const canvas = canvasRef.current;
@@ -105,7 +103,6 @@ export const Canvas = ({}) => {
   };
 
   const handleTouchMove = (e) => {
-    e.preventDefault();
     if (canvasMode == false) return;
     const touch = e.touches[0];
     const canvas = canvasRef.current;

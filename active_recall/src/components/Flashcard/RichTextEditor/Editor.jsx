@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useLayoutEffect, useRef } from "react";
+import React, { useCallback, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import ReactQuill from "react-quill";
 import EditorToolbar, { modules, formats } from "./EditorToolbar";
 import "react-quill/dist/quill.snow.css";
@@ -8,20 +8,28 @@ import "../../../styles/flashcard/editor.css";
 export const Editor = () => {
   const {
     canvasMode,
-    cardTextContent,
+    //cardTextContent,
     isAddCardDetails,
-    setCardTextContent,
+    //setCardTextContent,
     setIsAddCardDetails,
   } = useContext(CardCreatorContext);
+
+  const cardTextContent = useRef("");
+
+  const setCardTextContent = (value) => {
+    cardTextContent.current = value
+  }
+
+  const [reload, setReload ] = useState("");
 
 
   //Save Editor state and imageData
   useEffect(() => {
     if (isAddCardDetails) {
       console.log("isAddCardDetails LOAD");
-      if (cardTextContent.length > 0) {
+      if (cardTextContent.current.length > 0) {
         let div = document.createElement("div");
-        div.innerHTML = cardTextContent;
+        div.innerHTML = cardTextContent.current;
         const images = div.getElementsByTagName("img");
         if (images) {
           let imageData = localStorage.getItem("ImageData");
@@ -41,8 +49,8 @@ export const Editor = () => {
     }
   }, [isAddCardDetails]);
 
-  //Load from LocalStorage
-  useEffect(() => {
+   //Load from LocalStorage
+   useEffect(() => {
     console.log("First Load");
     let textContent = localStorage.getItem("TextEditor");
     //Bug fix of quill Headers
@@ -62,15 +70,18 @@ export const Editor = () => {
       }
       console.log("THIS IS DIV ----- ", div.getHTML());
       setCardTextContent(div.getHTML());
+      setReload("reload")
     }
   }, []);
+
+  console.log("EDITOR LOADED ------------------------------------ ")
 
   return (
     <div className="text-editor" style={{ zIndex: canvasMode ? 0 : 1 }}>
       <EditorToolbar />
       <ReactQuill
         theme="snow"
-        value={cardTextContent}
+        value={cardTextContent.current}
         onChange={setCardTextContent}
         placeholder={"Write something awesome..."}
         modules={modules}
