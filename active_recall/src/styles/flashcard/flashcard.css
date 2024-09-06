@@ -29,14 +29,33 @@
     background: none;
 }
 
+.flashcard_content_container{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
 .canvas_container{
     width: 100%;
-    height: 80%;
+    height: 95%;
+    margin-top: 0;
+    box-sizing: border-box;
     position: absolute;
 }
 
 .flashcard_canvas{
+    touch-action: none;
     width: 100%;
     height: 100%;
+}
 
+.controls {
+    width: 100%;
+    background-color: bisque;
+}
+
+
+.ql-editor{
+    height: 300px;
+    width: 100%;
 }

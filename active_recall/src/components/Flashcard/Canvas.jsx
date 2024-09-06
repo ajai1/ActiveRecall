@@ -1,14 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 import "../../styles/flashcard/flashcard.css";
+import { CardCreatorContext } from "../../contexts/card-creator-context";
 
-export const Canvas = ({
-  canvasMode,
-  clearCanvas,
-  setClearCanvas,
-  eraserSelected,
-  setEraserSelected,
-}) => {
+export const Canvas = ({}) => {
+  const {
+    canvasMode,
+    clearCanvas,
+    setClearCanvas,
+    eraserSelected,
+    isAddCardDetails,
+    setIsAddCardDetails
+  } = useContext(CardCreatorContext);
+
   const canvasRef = useRef(null);
   const [color, setColor] = useState("black");
   const [lineSize, setLineSize] = useState(1);
@@ -23,6 +27,13 @@ export const Canvas = ({
     window.addEventListener("resize", resizeCanvas);
     return () => window.removeEventListener("resize", resizeCanvas);
   }, []);
+
+  useEffect(()=>{
+    if(isAddCardDetails){
+      saveCanvasData();
+      setIsAddCardDetails(false);
+  }
+},[isAddCardDetails])
 
   //Clear Canvas
   useEffect(() => {
@@ -55,12 +66,6 @@ export const Canvas = ({
     ctx.clearRect(x - 30 / 2, y - 30 / 2, 30, 30);
   };
 
-  const saveCanvasData = () => {
-    const canvas = canvasRef.current;
-    const dataURL = canvas.toDataURL();
-    localStorage.setItem("canvasData", dataURL);
-  };
-
   const resizeCanvas = () => {
     const canvas = canvasRef.current;
     if (canvas) {
@@ -76,26 +81,31 @@ export const Canvas = ({
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           ctx.drawImage(img, 0, 0);
         };
-      } else {
-        ctx.fillStyle = "red";
-        ctx.fillRect(10, 10, 100, 100);
       }
     }
+  };
+
+  const saveCanvasData = () => {
+    const canvas = canvasRef.current;
+    const dataURL = canvas.toDataURL();
+    localStorage.setItem("canvasData", dataURL);
   };
 
   //Event Handlers ################################################################################################
 
   const handleTouchStart = (e) => {
+    e.preventDefault();
+
     if (canvasMode == false) return;
     const touch = e.touches[0];
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
     const rect = canvas.getBoundingClientRect();
     setLastX(touch.clientX - rect.left);
     setLastY(touch.clientY - rect.top);
   };
 
   const handleTouchMove = (e) => {
+    e.preventDefault();
     if (canvasMode == false) return;
     const touch = e.touches[0];
     const canvas = canvasRef.current;
@@ -117,10 +127,11 @@ export const Canvas = ({
     setLastY(currentY);
   };
 
-  const handleTouchEnd = () => {
+  const handleTouchEnd = (e) => {
+    e.preventDefault();
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-    saveCanvasData();
+    //saveCanvasData();
   };
 
   return (
