@@ -9,6 +9,8 @@ export const CardCreatorContextProvider = ({ children }) => {
   const [cardTextContent, setCardTextContent] = useState("");
   const [isAddCardDetails, setIsAddCardDetails] = useState(false);
   const [color, setColor] = useState("#000000"); // Initial color
+  const [showBackCard, setShowBackCard] = useState(false);
+
   const editorRef = useRef(null);
 
   const handleColorChange = (event) => {
@@ -23,12 +25,14 @@ export const CardCreatorContextProvider = ({ children }) => {
     editorRef,
     cardTextContent,
     color,
+    showBackCard,
     setCanvasMode,
     setClearCanvas,
     setEraserSelected,
     setIsAddCardDetails,
     setCardTextContent,
     handleColorChange,
+    setShowBackCard,
   };
 
   return (

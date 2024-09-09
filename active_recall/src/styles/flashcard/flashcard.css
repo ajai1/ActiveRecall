@@ -1,79 +1,111 @@
 .flashcard_container {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 300px;
-    height: 450px;
-    padding: 10px;
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: 1px 5px 8px #2f2f2fc0;
+  position: relative;
+  width: 300px;
+  height: 450px;
+  perspective: 1000px; /* This creates the 3D effect */
+  transition: all 0.75s ease;
+}
+
+.card {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  transform-style: preserve-3d; /* Enables 3D transformation for children */
+  transition: transform 0.75s ease; /* Animation duration and easing */
+}
+
+.card_front_container,
+.card_back_container {
+  position: absolute;
+  display: flex;
+  top: 0;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 450px;
+  background-color: white;
+  box-shadow: 1px 5px 8px #2f2f2fc0;
+  border-radius: 5px;
+  backface-visibility: hidden;
+}
+
+.card_front_container {
+  z-index: 2;
+}
+
+.card_back_container {
+  transform: rotateY(180deg); /* Initially hidden behind the front */
+}
+
+.card_flip {
+  transform: rotateY(180deg);
 }
 
 .canvas_mode {
-    position: absolute;
-    right: 5px;
-    z-index: 100;
-    background-color: #F6F6F6;
-    box-shadow: 1px 5px 8px #7574746d;
-    border-radius: 50%;
+  position: absolute;
+  top: 0;
+  right: 5px;
+  z-index: 100;
+  background-color: #f6f6f6;
+  box-shadow: 1px 5px 8px #7574746d;
+  border-radius: 50%;
 }
 
 .canvas_mode.clicked {
-    box-shadow: 0px 2px 8px #2C5079;
+  box-shadow: 0px 2px 8px #2c5079;
 }
 
 .canvas_controls {
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    display: block;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  display: block;
 }
 
 .canvas_controls.hide_canvas_controls {
-    display: none;
+  display: none;
 }
 
 .flashcard_header {
-    border: none;
-    outline: none;
-    text-align: 'center';
-    font-size: large;
-    white-space: 'pre-wrap';
-    wordWrap: 'break-word';
+  border: none;
+  outline: none;
+  text-align: "center";
+  font-size: 20px;
+  font-weight: bold;
+  white-space: "pre-wrap";
+  wordwrap: "break-word";
 }
 
-
 .flashcard_textarea {
-    border: none;
-    outline: none;
-    width: 80%;
-    height: 100%;
-    background: none;
+  border: none;
+  outline: none;
+  width: 80%;
+  height: 40%;
+  background: none;
 }
 
 .flashcard_content_container {
-    width: 100%;
-    height: 100%;
-    position: absolute;
+  width: 100%;
+  height: 100%;
+  position: absolute;
 }
 
 .canvas_container {
-    width: 100%;
-    height: 95%;
-    margin-top: 0;
-    box-sizing: border-box;
-    position: absolute;
+  width: 100%;
+  height: 95%;
+  margin-top: 0;
+  box-sizing: border-box;
+  position: absolute;
 }
 
 .flashcard_canvas {
-    touch-action: none;
-    width: 100%;
-    height: 100%;
+  touch-action: none;
+  width: 100%;
+  height: 100%;
 }
 
 .controls {
-    width: 100%;
-    background-color: bisque;
+  width: 100%;
+  background-color: bisque;
 }
