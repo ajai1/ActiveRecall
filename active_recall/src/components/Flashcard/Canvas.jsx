@@ -12,10 +12,9 @@ export const Canvas = ({}) => {
     isAddCardDetails,
     setIsAddCardDetails,
     color,
-    handleColorChange
+    canvasRef,
   } = useContext(CardCreatorContext);
 
-  const canvasRef = useRef(null);
   //const [color, setColor] = useState("black");
   const [lineSize, setLineSize] = useState(1);
   const [lastX, setLastX] = useState(0);
@@ -30,13 +29,6 @@ export const Canvas = ({}) => {
     return () => window.removeEventListener("resize", resizeCanvas);
   }, []);
 
-  useEffect(()=>{
-    if(isAddCardDetails){
-      saveCanvasData();
-      setIsAddCardDetails(false);
-  }
-},[isAddCardDetails])
-
   //Clear Canvas
   useEffect(() => {
     console.log("Clearing Canvas");
@@ -45,10 +37,9 @@ export const Canvas = ({}) => {
       const ctx = canvas.getContext("2d");
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       setClearCanvas(false);
-      saveCanvasData();
+      //saveCanvasData();
     }
   }, [clearCanvas]);
-
 
   // Util Functions ###################################################################################################
 
@@ -58,13 +49,13 @@ export const Canvas = ({}) => {
     ctx.clearRect(x - 30 / 2, y - 30 / 2, 30, 30);
   };
 
+  // load from local storage canvasData
   const resizeCanvas = () => {
     const canvas = canvasRef.current;
     if (canvas) {
       const ctx = canvas.getContext("2d");
       canvas.width = canvas.clientWidth;
       canvas.height = canvas.clientHeight;
-      // load from local storage canvasData
       const savedCanvasData = localStorage.getItem("canvasData");
       if (savedCanvasData) {
         const img = new Image();

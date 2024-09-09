@@ -13,20 +13,19 @@ import { CardCreatorContext } from "../../../contexts/card-creator-context";
 import "../../../styles/flashcard/editor.css";
 
 export const Editor = () => {
-  const { canvasMode, isAddCardDetails, setIsAddCardDetails } =
-    useContext(CardCreatorContext);
-
-  const cardTextContent = useRef("");
-
-  const setCardTextContent = (value) => {
-    cardTextContent.current = value;
-  };
+  const {
+    canvasMode,
+    isAddCardDetails,
+    setIsAddCardDetails,
+    cardTextContent,
+    setCardTextContent,
+  } = useContext(CardCreatorContext);
 
   const quillRef = useRef(null); // Ref for accessing the Quill editor instance
 
   const [reload, setReload] = useState("");
 
-  //Save Editor state and imageData
+  /*  //Save Editor state and imageData
   useEffect(() => {
     if (isAddCardDetails) {
       if (cardTextContent.current.length > 0) {
@@ -49,7 +48,7 @@ export const Editor = () => {
         setIsAddCardDetails(false);
       }
     }
-  }, [isAddCardDetails]);
+  }, [isAddCardDetails]); */
 
   //Load from LocalStorage
   useEffect(() => {

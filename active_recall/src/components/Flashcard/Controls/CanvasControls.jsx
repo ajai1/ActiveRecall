@@ -2,15 +2,12 @@ import React, { useContext, useEffect, useState } from "react";
 
 import "../../../styles/flashcard/controls.css";
 import EraserSvg from "../../../static/icons/eraser.svg";
-import DrawSvg from "../../../static/icons/draw.svg";
 import ClearCanvasPNG from "../../../static/icons/clearCanvas.png";
 import { CardCreatorContext } from "../../../contexts/card-creator-context";
 
 export const CanvasControls = () => {
-  const { canvasMode, clearCanvas, eraserSelected, color } =
-    useContext(CardCreatorContext);
-  const { setCanvasMode, setClearCanvas, setEraserSelected, setTextAlign } =
-    useContext(CardCreatorContext);
+  const { eraserSelected, color } = useContext(CardCreatorContext);
+  const { setClearCanvas, setEraserSelected } = useContext(CardCreatorContext);
   const { handleColorChange } = useContext(CardCreatorContext);
   const [IconContainerStyles, setIconContainerStyles] = useState([
     "icon_container",
