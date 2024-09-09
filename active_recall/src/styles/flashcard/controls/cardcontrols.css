@@ -1,4 +1,5 @@
 .card_control_container {
-    display: flex;
-    background-color: antiquewhite;
+  display: flex;
+  justify-content: center;
+  background-color: antiquewhite;
 }

@@ -3,25 +3,49 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 80%;
-    height: 30em;
+    width: 300px;
+    height: 450px;
     padding: 10px;
     background-color: white;
     border-radius: 5px;
     box-shadow: 1px 5px 8px #2f2f2fc0;
 }
 
-.flashcard_header{
+.canvas_mode {
+    position: absolute;
+    right: 5px;
+    z-index: 100;
+    background-color: #F6F6F6;
+    box-shadow: 1px 5px 8px #7574746d;
+    border-radius: 50%;
+}
+
+.canvas_mode.clicked {
+    box-shadow: 0px 2px 8px #2C5079;
+}
+
+.canvas_controls {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    display: block;
+}
+
+.canvas_controls.hide_canvas_controls {
+    display: none;
+}
+
+.flashcard_header {
     border: none;
     outline: none;
     text-align: 'center';
     font-size: large;
     white-space: 'pre-wrap';
-     wordWrap: 'break-word';
+    wordWrap: 'break-word';
 }
 
 
-.flashcard_textarea{
+.flashcard_textarea {
     border: none;
     outline: none;
     width: 80%;
@@ -29,13 +53,13 @@
     background: none;
 }
 
-.flashcard_content_container{
+.flashcard_content_container {
     width: 100%;
     height: 100%;
     position: absolute;
 }
 
-.canvas_container{
+.canvas_container {
     width: 100%;
     height: 95%;
     margin-top: 0;
@@ -43,7 +67,7 @@
     position: absolute;
 }
 
-.flashcard_canvas{
+.flashcard_canvas {
     touch-action: none;
     width: 100%;
     height: 100%;
@@ -52,10 +76,4 @@
 .controls {
     width: 100%;
     background-color: bisque;
-}
-
-
-.ql-editor{
-    height: 300px;
-    width: 100%;
 }

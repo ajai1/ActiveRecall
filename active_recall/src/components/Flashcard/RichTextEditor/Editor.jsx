@@ -1,4 +1,11 @@
-import React, { useCallback, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import ReactQuill from "react-quill";
 import EditorToolbar, { modules, formats } from "./EditorToolbar";
 import "react-quill/dist/quill.snow.css";
@@ -6,27 +13,22 @@ import { CardCreatorContext } from "../../../contexts/card-creator-context";
 import "../../../styles/flashcard/editor.css";
 
 export const Editor = () => {
-  const {
-    canvasMode,
-    //cardTextContent,
-    isAddCardDetails,
-    //setCardTextContent,
-    setIsAddCardDetails,
-  } = useContext(CardCreatorContext);
+  const { canvasMode, isAddCardDetails, setIsAddCardDetails } =
+    useContext(CardCreatorContext);
 
   const cardTextContent = useRef("");
 
   const setCardTextContent = (value) => {
-    cardTextContent.current = value
-  }
+    cardTextContent.current = value;
+  };
 
-  const [reload, setReload ] = useState("");
+  const quillRef = useRef(null); // Ref for accessing the Quill editor instance
 
+  const [reload, setReload] = useState("");
 
   //Save Editor state and imageData
   useEffect(() => {
     if (isAddCardDetails) {
-      console.log("isAddCardDetails LOAD");
       if (cardTextContent.current.length > 0) {
         let div = document.createElement("div");
         div.innerHTML = cardTextContent.current;
@@ -49,8 +51,8 @@ export const Editor = () => {
     }
   }, [isAddCardDetails]);
 
-   //Load from LocalStorage
-   useEffect(() => {
+  //Load from LocalStorage
+  useEffect(() => {
     console.log("First Load");
     let textContent = localStorage.getItem("TextEditor");
     //Bug fix of quill Headers
@@ -68,18 +70,20 @@ export const Editor = () => {
           }
         }
       }
-      console.log("THIS IS DIV ----- ", div.getHTML());
       setCardTextContent(div.getHTML());
-      setReload("reload")
+      setReload("reload");
+    }
+    if (quillRef.current) {
+      const quill = quillRef.current.getEditor();
+      quill.format("header", 1); // Set the initial format to 'h1'
     }
   }, []);
 
-  console.log("EDITOR LOADED ------------------------------------ ")
-
   return (
     <div className="text-editor" style={{ zIndex: canvasMode ? 0 : 1 }}>
-      <EditorToolbar />
+      <EditorToolbar canvasMode={canvasMode} />
       <ReactQuill
+        ref={quillRef}
         theme="snow"
         value={cardTextContent.current}
         onChange={setCardTextContent}

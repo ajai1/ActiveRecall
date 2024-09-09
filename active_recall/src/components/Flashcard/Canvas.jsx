@@ -10,11 +10,13 @@ export const Canvas = ({}) => {
     setClearCanvas,
     eraserSelected,
     isAddCardDetails,
-    setIsAddCardDetails
+    setIsAddCardDetails,
+    color,
+    handleColorChange
   } = useContext(CardCreatorContext);
 
   const canvasRef = useRef(null);
-  const [color, setColor] = useState("black");
+  //const [color, setColor] = useState("black");
   const [lineSize, setLineSize] = useState(1);
   const [lastX, setLastX] = useState(0);
   const [lastY, setLastY] = useState(0);
@@ -47,16 +49,6 @@ export const Canvas = ({}) => {
     }
   }, [clearCanvas]);
 
-  //EraserMode
-  useEffect(() => {
-    if (eraserSelected == true) {
-      setColor("white");
-      setLineSize(30);
-    } else {
-      setColor("black");
-      setLineSize(1);
-    }
-  }, [eraserSelected]);
 
   // Util Functions ###################################################################################################
 

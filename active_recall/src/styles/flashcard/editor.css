@@ -1,20 +1,20 @@
 .text-editor {
-    width: 100%;
-    height: 100%;
-    margin: 0 auto;
-    position: absolute;
-    display: flex;
-    flex-direction: column-reverse;
-  }
-  
-  .quill{
-    height: 100%;
-  }
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  position: absolute;
+  display: flex;
+  flex-direction: column-reverse;
+}
 
-  .ql-editor {
-    height: 95%;
-   }
+.quill {
+  height: 100%;
+}
 
-   .ql-container.ql-snow {
-    border: none;
-   }
+.ql-editor {
+  height: 350px;
+  width: 100%;
+}
+.ql-container.ql-snow {
+  border: none;
+}

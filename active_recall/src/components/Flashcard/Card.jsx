@@ -8,16 +8,31 @@ import { Canvas } from "./Canvas";
 import { CardCreatorContext } from "../../contexts/card-creator-context";
 import { Editor } from "./RichTextEditor/Editor";
 
+import DrawSvg from "../../static/icons/draw.svg";
+import { CanvasControls } from "./Controls/CanvasControls";
+
 export const Card = () => {
-  const { canvasMode, clearCanvas, eraserSelected, setCardTextContent } =
-    useContext(CardCreatorContext);
+  const {
+    canvasMode,
+    clearCanvas,
+    eraserSelected,
+    setCardTextContent,
+    setCanvasMode,
+  } = useContext(CardCreatorContext);
   const { setClearCanvas, setEraserSelected } = useContext(CardCreatorContext);
 
-
-  console.log("CARD LOADED --------------------------------- ")
+  function canvasModeClick() {
+    setCanvasMode((prev) => !prev);
+  }
 
   return (
     <div className="flashcard_container">
+      <div
+        className={`canvas_mode ${canvasMode ? "clicked" : ""}`}
+        onClick={() => canvasModeClick()}
+      >
+        <img width="30px" src={DrawSvg}></img>
+      </div>
       <Editor />
       <div className="flashcard_content_container">
         <Canvas
@@ -27,6 +42,13 @@ export const Card = () => {
           eraserSelected={eraserSelected}
           setEraserSelected={setEraserSelected}
         ></Canvas>
+      </div>
+      <div
+        className={`canvas_controls ${
+          canvasMode ? "" : "hide_canvas_controls"
+        }`}
+      >
+        <CanvasControls></CanvasControls>
       </div>
     </div>
   );
