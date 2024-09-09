@@ -9,7 +9,6 @@ export const CardCreatorContextProvider = ({ children }) => {
   const [eraserSelected, setEraserSelected] = useState(false);
   const [header, setHeader] = useState("");
   const [briefStatement, setBriefStatement] = useState("");
-  //const [cardTextContent, setCardTextContent] = useState("");
   const [isAddCardDetails, setIsAddCardDetails] = useState(false);
   const [color, setColor] = useState("#000000"); // Initial color
   const [showBackCard, setShowBackCard] = useState(false);
@@ -26,8 +25,6 @@ export const CardCreatorContextProvider = ({ children }) => {
     setColor(event.target.value);
   };
 
-  const saveToLocalStorage = () => {};
-
   useEffect(() => {
     let cardFrontStore = localStorage.getItem("cardfront");
     if (cardFrontStore) {
@@ -36,8 +33,6 @@ export const CardCreatorContextProvider = ({ children }) => {
       setBriefStatement(cardFrontStore.briefStatement);
     }
   }, []);
-
-  useEffect(() => {}, [isAddCardDetails]);
 
   useSaveToLocalStorage({
     isAddCardDetails,
@@ -48,22 +43,6 @@ export const CardCreatorContextProvider = ({ children }) => {
     clearCanvas,
     setIsAddCardDetails,
   });
-
-  /*     if (isAddCardDetails) {
-      let cardFrontStorage = localStorage.getItem("cardfront");
-      if (cardFrontStorage) {
-        cardFrontStorage = JSON.parse(cardFrontStorage);
-        cardFrontStorage.header = header;
-        cardFrontStorage.briefStatement = briefStatement;
-        localStorage.setItem("cardfront", JSON.stringify(cardFrontStorage));
-      } else {
-        const front = {
-          header,
-          briefStatement,
-        };
-        localStorage.setItem("cardfront", JSON.stringify(front));
-      }
-    } */
 
   const ctxValue = {
     canvasMode,
