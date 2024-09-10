@@ -1,11 +1,18 @@
 .navbar {
-    display: flex;
-    background-color: #2D527C;
-    align-items: center;
-    height: 2em;
-    color: white;
+  display: flex;
+  background-color: #606676;
+  align-items: center;
+  height: 2em;
+  color: white;
 }
 
-.nav_items{
-    margin-left: 1em;
+.nav_items {
+  margin-left: 1em;
+  color: white;
+  text-decoration: none;
+}
+
+.nav_items:hover,
+.nav_items:active {
+  text-decoration: underline;
 }

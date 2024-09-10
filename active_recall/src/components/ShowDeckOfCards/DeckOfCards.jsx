@@ -1,13 +1,21 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { ShowDeckOfCards } from "./ShowDeckOfCards";
 import { ShowSelectedDeck } from "./ShowSelectedDeck";
-import { CardCreatorContextProvider } from "../../contexts/card-creator-context";
+import {
+  CardCreatorContext,
+  CardCreatorContextProvider,
+} from "../../contexts/card-creator-context";
 
 export const DeckOfCards = () => {
+  const { resetStates } = useContext(CardCreatorContext);
+  useEffect(() => {
+    resetStates();
+    console.log("Reset State !!!");
+  });
   return (
-    <CardCreatorContextProvider>
+    <>
       <ShowDeckOfCards></ShowDeckOfCards>
       <ShowSelectedDeck />
-    </CardCreatorContextProvider>
+    </>
   );
 };

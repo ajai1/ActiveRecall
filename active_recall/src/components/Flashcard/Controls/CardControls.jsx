@@ -1,11 +1,13 @@
 import React, { useContext } from "react";
 import { CanvasControls } from "./CanvasControls";
+import { useNavigate } from "react-router-dom";
 
 import "../../../styles/flashcard/controls/cardcontrols.css";
 import { CardCreatorContext } from "../../../contexts/card-creator-context";
 
 export const CardControls = () => {
   const {
+    deckName,
     noOfCardsInThisDeck,
     cardId,
     setIsAddCardDetails,
@@ -16,6 +18,17 @@ export const CardControls = () => {
     resetStates,
     setIsDeckShowMode,
   } = useContext(CardCreatorContext);
+
+  const navigate = useNavigate();
+
+  const goBack = () => {
+    if (isDeckShowMode) {
+      navigate("/deck-of-cards");
+      setIsDeckShowMode(false);
+    } else {
+      navigate("/create");
+    }
+  };
 
   const handleCardID = (type) => {
     resetStates();
@@ -59,7 +72,7 @@ export const CardControls = () => {
           Save
         </button>
       )}
-      <button onClick={() => setIsDeckShowMode(false)}>Go Back</button>
+      <button onClick={() => goBack()}>Go Back</button>
     </div>
   );
 };

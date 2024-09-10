@@ -1,7 +1,18 @@
-.dashboard_container {
+.dashboard_navs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 200px;
+  background-color: #708871;
+  margin-bottom: 10px;
 }
 
-.card_section{
-    display: flex;
-    justify-content: center;
+.dashboard_navs:hover {
+  background-color: #bec6a0;
+}
+
+.card_section {
+  display: flex;
+  justify-content: center;
 }

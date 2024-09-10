@@ -5,18 +5,24 @@ import {
   CardCreatorContext,
   CardCreatorContextProvider,
 } from "../../contexts/card-creator-context";
+import { useParams } from "react-router-dom";
 
-export const CreateFlashCard = ({ deckName }) => {
-  const { setDeckName } = useContext(CardCreatorContext);
+export const CreateFlashCard = () => {
+  const { deckName, setDeckName, setCardId } = useContext(CardCreatorContext);
+  const param = useParams();
+  useEffect(() => {
+    console.log("param", param.deck_id, param.card_id, deckName);
+    setDeckName(param.deck_id);
+  }, [param.deck_id]);
 
   return (
-    <CardCreatorContextProvider>
+    <>
       <section className="card_section">
         <Card deckName={deckName} />
       </section>
       <section className="card_controls">
         <CardControls deckName={deckName}></CardControls>
       </section>
-    </CardCreatorContextProvider>
+    </>
   );
 };

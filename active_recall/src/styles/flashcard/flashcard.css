@@ -109,3 +109,10 @@
   width: 100%;
   background-color: bisque;
 }
+
+.deck_card_container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}

@@ -1,7 +1,9 @@
 // src/hooks/useSaveToLocalStorage.js
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const useSaveToLocalStorage = ({
+  cardId,
   deckName,
   isAddCardDetails,
   header,
@@ -10,6 +12,8 @@ export const useSaveToLocalStorage = ({
   canvasRef,
   resetStates,
 }) => {
+  const navigate = useNavigate();
+
   const getCardFrontData = (data) => {
     const cardFrontStorage = {};
     cardFrontStorage.header = header;
@@ -81,8 +85,9 @@ export const useSaveToLocalStorage = ({
     if (isAddCardDetails) {
       setCardData();
       console.log("SAVED CARD DATA !!!");
-
       resetStates();
+      const pathTo = `/create/${deckName}`;
+      navigate(pathTo);
     }
   }, [isAddCardDetails]);
 };
