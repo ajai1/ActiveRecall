@@ -5,7 +5,7 @@ import "../../../styles/flashcard/controls/cardcontrols.css";
 import { CardCreatorContext } from "../../../contexts/card-creator-context";
 
 export const CardControls = () => {
-  const { setIsAddCardDetails, setShowBackCard } =
+  const { cardId, setIsAddCardDetails, setShowBackCard, setCardId } =
     useContext(CardCreatorContext);
   return (
     <div className="card_control_container">

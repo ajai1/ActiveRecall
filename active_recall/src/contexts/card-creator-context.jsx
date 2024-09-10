@@ -4,6 +4,8 @@ import { useSaveToLocalStorage } from "../hooks/saveToStorage";
 export const CardCreatorContext = createContext({});
 
 export const CardCreatorContextProvider = ({ children }) => {
+  const [deckName, setDeckName] = useState("");
+  const [cardId, setCardId] = useState(0);
   const [canvasMode, setCanvasMode] = useState(false);
   const [clearCanvas, setClearCanvas] = useState(false);
   const [eraserSelected, setEraserSelected] = useState(false);
@@ -26,15 +28,19 @@ export const CardCreatorContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    let cardFrontStore = localStorage.getItem("cardfront");
-    if (cardFrontStore) {
-      cardFrontStore = JSON.parse(cardFrontStore);
-      setHeader(cardFrontStore.header);
-      setBriefStatement(cardFrontStore.briefStatement);
+    const getCard = JSON.parse(localStorage.getItem("cards"));
+    if (getCard) {
+      let cardFrontStore = getCard[cardId].front;
+      if (cardFrontStore) {
+        setHeader(cardFrontStore.header);
+        setBriefStatement(cardFrontStore.briefStatement);
+      }
     }
   }, []);
 
   useSaveToLocalStorage({
+    deckName,
+    cardId,
     isAddCardDetails,
     header,
     briefStatement,
@@ -45,6 +51,8 @@ export const CardCreatorContextProvider = ({ children }) => {
   });
 
   const ctxValue = {
+    deckName,
+    cardId,
     canvasMode,
     clearCanvas,
     eraserSelected,
@@ -56,6 +64,8 @@ export const CardCreatorContextProvider = ({ children }) => {
     showBackCard,
     header,
     briefStatement,
+    setDeckName,
+    setCardId,
     setBriefStatement,
     setHeader,
     setCanvasMode,

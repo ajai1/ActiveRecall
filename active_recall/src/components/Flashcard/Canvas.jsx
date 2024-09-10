@@ -5,6 +5,7 @@ import { CardCreatorContext } from "../../contexts/card-creator-context";
 
 export const Canvas = ({}) => {
   const {
+    cardId,
     canvasMode,
     clearCanvas,
     setClearCanvas,
@@ -19,6 +20,7 @@ export const Canvas = ({}) => {
   const [lineSize, setLineSize] = useState(1);
   const [lastX, setLastX] = useState(0);
   const [lastY, setLastY] = useState(0);
+  const [isDrawing, setIsDrawing] = useState(false);
 
   //UseEffects ########################################################################################################
 
@@ -56,8 +58,9 @@ export const Canvas = ({}) => {
       const ctx = canvas.getContext("2d");
       canvas.width = canvas.clientWidth;
       canvas.height = canvas.clientHeight;
-      const savedCanvasData = localStorage.getItem("canvasData");
-      if (savedCanvasData) {
+      const getCard = JSON.parse(localStorage.getItem("cards"));
+      if (getCard) {
+        const savedCanvasData = getCard[cardId].back.canvas;
         const img = new Image();
         img.src = savedCanvasData;
         img.onload = () => {
@@ -75,6 +78,15 @@ export const Canvas = ({}) => {
   };
 
   //Event Handlers ################################################################################################
+
+  const handleMouseDown = (e) => {
+    if (!canvasMode) return;
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    setLastX(e.clientX - rect.left);
+    setLastY(e.clientY - rect.top);
+    setIsDrawing(true); // Flag to track if the drawing is in progress
+  };
 
   const handleTouchStart = (e) => {
     if (canvasMode == false) return;
@@ -107,11 +119,39 @@ export const Canvas = ({}) => {
     setLastY(currentY);
   };
 
+  const handleMouseMove = (e) => {
+    if (!canvasMode || !isDrawing) return;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    const rect = canvas.getBoundingClientRect();
+    const currentX = e.clientX - rect.left;
+    const currentY = e.clientY - rect.top;
+
+    if (eraserSelected) {
+      erase(currentX, currentY);
+    } else {
+      ctx.beginPath();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = lineSize;
+      ctx.moveTo(lastX, lastY);
+      ctx.lineTo(currentX, currentY);
+      ctx.stroke();
+    }
+
+    setLastX(currentX);
+    setLastY(currentY);
+  };
+
   const handleTouchEnd = (e) => {
     e.preventDefault();
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-    //saveCanvasData();
+  };
+
+  const handleMouseUp = (e) => {
+    e.preventDefault();
+    if (!canvasMode) return;
+    setIsDrawing(false); // Reset the drawing flag when the mouse is released
   };
 
   return (
@@ -122,6 +162,9 @@ export const Canvas = ({}) => {
         onTouchMove={handleTouchMove}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
       ></canvas>
     </div>
   );

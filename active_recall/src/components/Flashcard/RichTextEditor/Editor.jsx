@@ -13,64 +13,38 @@ import { CardCreatorContext } from "../../../contexts/card-creator-context";
 import "../../../styles/flashcard/editor.css";
 
 export const Editor = () => {
-  const {
-    canvasMode,
-    isAddCardDetails,
-    setIsAddCardDetails,
-    cardTextContent,
-    setCardTextContent,
-  } = useContext(CardCreatorContext);
+  const { cardId, canvasMode, cardTextContent, setCardTextContent } =
+    useContext(CardCreatorContext);
 
   const quillRef = useRef(null); // Ref for accessing the Quill editor instance
 
   const [reload, setReload] = useState("");
 
-  /*  //Save Editor state and imageData
-  useEffect(() => {
-    if (isAddCardDetails) {
-      if (cardTextContent.current.length > 0) {
-        let div = document.createElement("div");
-        div.innerHTML = cardTextContent.current;
-        const images = div.getElementsByTagName("img");
-        if (images) {
-          let imageData = localStorage.getItem("ImageData");
-          if (!imageData || imageData.length == 0) imageData = {};
-          else imageData = JSON.parse(imageData);
-          for (let i = 0; i < images.length; i++) {
-            const imageId = `image-${Date.now()}`;
-            imageData[imageId] = images[i].src;
-            images[i].id = imageId;
-            images[i].src = "";
-          }
-          localStorage.setItem("ImageData", JSON.stringify(imageData));
-        }
-        localStorage.setItem("TextEditor", div.getHTML());
-        setIsAddCardDetails(false);
-      }
-    }
-  }, [isAddCardDetails]); */
-
   //Load from LocalStorage
   useEffect(() => {
     console.log("First Load");
-    let textContent = localStorage.getItem("TextEditor");
-    //Bug fix of quill Headers
-    if (textContent && textContent.length > 1) {
-      textContent = textContent.replace(/(<p><br><\/p>)(?=<h1>)/g, "");
-      let div = document.createElement("div");
-      div.innerHTML = textContent;
-      const images = div.getElementsByTagName("img");
-      if (images) {
-        let imageData = localStorage.getItem("ImageData");
-        if (imageData && imageData.length > 0) {
-          imageData = JSON.parse(imageData);
-          for (let i = 0; i < images.length; i++) {
-            images[i].src = imageData[images[i].id];
+    const getCard = JSON.parse(localStorage.getItem("cards"));
+    if (getCard && getCard[cardId]) {
+      let textContent = getCard[cardId].back?.text;
+      //Bug fix of quill Headers
+      if (textContent && textContent.length > 1) {
+        textContent = textContent.replace(/(<p><br><\/p>)(?=<h1>)/g, "");
+        let div = document.createElement("div");
+        div.innerHTML = textContent;
+        const images = div.getElementsByTagName("img");
+        if (images) {
+          let imageData = localStorage.getItem("ImageData");
+          if (imageData && imageData.length > 0) {
+            imageData = JSON.parse(imageData);
+            for (let i = 0; i < images.length; i++) {
+              images[i].src = imageData[images[i].id];
+            }
           }
         }
+        console.log("div.getHTML()", div.getHTML());
+        setCardTextContent(div.getHTML());
+        setReload("reload");
       }
-      setCardTextContent(div.getHTML());
-      setReload("reload");
     }
     if (quillRef.current) {
       const quill = quillRef.current.getEditor();
