@@ -6,7 +6,8 @@ import ClearCanvasPNG from "../../../static/icons/clearCanvas.png";
 import { CardCreatorContext } from "../../../contexts/card-creator-context";
 
 export const CanvasControls = () => {
-  const { eraserSelected, color } = useContext(CardCreatorContext);
+  const { eraserSelected, color, isDeckShowMode } =
+    useContext(CardCreatorContext);
   const { setClearCanvas, setEraserSelected } = useContext(CardCreatorContext);
   const { handleColorChange } = useContext(CardCreatorContext);
   const [IconContainerStyles, setIconContainerStyles] = useState([
@@ -22,7 +23,10 @@ export const CanvasControls = () => {
   }, [eraserSelected]);
 
   return (
-    <div className="canvas_controls_container">
+    <div
+      className="canvas_controls_container"
+      style={{ display: isDeckShowMode ? "none" : "flex" }}
+    >
       <span
         className="control_container"
         onClick={() => setClearCanvas((prev) => !prev)}

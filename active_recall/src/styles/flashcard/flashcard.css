@@ -82,6 +82,7 @@
   width: 80%;
   height: 40%;
   background: none;
+  resize: none;
 }
 
 .flashcard_content_container {

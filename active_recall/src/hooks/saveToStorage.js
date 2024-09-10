@@ -2,13 +2,13 @@
 import { useEffect } from "react";
 
 export const useSaveToLocalStorage = ({
-  cardId,
+  deckName,
   isAddCardDetails,
   header,
   briefStatement,
   cardTextContent,
   canvasRef,
-  setIsAddCardDetails,
+  resetStates,
 }) => {
   const getCardFrontData = (data) => {
     const cardFrontStorage = {};
@@ -62,17 +62,18 @@ export const useSaveToLocalStorage = ({
       const cardFront = getCardFrontData();
       const cardBack = getCardBackData();
       const imageData = cardBack.imageData;
-      const cards = JSON.parse(localStorage.getItem("cards")) || [];
+      const deckOfCards = JSON.parse(localStorage.getItem("deckOfCards")) || {};
+
+      const cards = deckOfCards[deckName] ? deckOfCards[deckName] : [];
+
       const dataSet = {
         front: cardFront,
         back: { canvas: cardBack.canvasData, text: cardBack.textData },
       };
       cards.push(dataSet);
-      localStorage.setItem("cards", JSON.stringify(cards));
-      //localStorage.setItem("cardfront", JSON.stringify(getCardFrontData()));
+      deckOfCards[deckName] = cards;
+      localStorage.setItem("deckOfCards", JSON.stringify(deckOfCards));
       localStorage.setItem("ImageData", JSON.stringify(imageData));
-      //localStorage.setItem("canvasData", canvasData);
-      //localStorage.setItem("TextEditor", div.getHTML());
     }
   };
 
@@ -81,7 +82,7 @@ export const useSaveToLocalStorage = ({
       setCardData();
       console.log("SAVED CARD DATA !!!");
 
-      setIsAddCardDetails(false);
+      resetStates();
     }
   }, [isAddCardDetails]);
 };

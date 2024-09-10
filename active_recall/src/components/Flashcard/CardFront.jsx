@@ -3,8 +3,13 @@ import "../../styles/flashcard/flashcard.css";
 import { CardCreatorContext } from "../../contexts/card-creator-context";
 
 export const CardFront = () => {
-  const { header, briefStatement, setBriefStatement, setHeader } =
-    useContext(CardCreatorContext);
+  const {
+    isDeckShowMode,
+    header,
+    briefStatement,
+    setBriefStatement,
+    setHeader,
+  } = useContext(CardCreatorContext);
 
   return (
     <>
@@ -15,14 +20,16 @@ export const CardFront = () => {
           value={header}
           onChange={(event) => setHeader(event.target.value)}
           type="text"
-          placeholder="Enter the Header"
+          placeholder={!isDeckShowMode ? "Enter the Header" : ""}
+          readOnly={isDeckShowMode}
         ></input>
 
         <textarea
           className="flashcard_textarea"
-          placeholder="Enter the content"
+          placeholder={!isDeckShowMode ? "Enter the content" : ""}
           value={briefStatement}
           onChange={(event) => setBriefStatement(event.target.value)}
+          readOnly={isDeckShowMode}
         ></textarea>
       </>
     </>

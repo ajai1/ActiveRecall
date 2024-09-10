@@ -5,18 +5,16 @@ import { CardCreatorContext } from "../../contexts/card-creator-context";
 
 export const Canvas = ({}) => {
   const {
+    deckName,
     cardId,
     canvasMode,
     clearCanvas,
     setClearCanvas,
     eraserSelected,
-    isAddCardDetails,
-    setIsAddCardDetails,
     color,
     canvasRef,
   } = useContext(CardCreatorContext);
 
-  //const [color, setColor] = useState("black");
   const [lineSize, setLineSize] = useState(1);
   const [lastX, setLastX] = useState(0);
   const [lastY, setLastY] = useState(0);
@@ -29,7 +27,7 @@ export const Canvas = ({}) => {
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
     return () => window.removeEventListener("resize", resizeCanvas);
-  }, []);
+  }, [cardId]);
 
   //Clear Canvas
   useEffect(() => {
@@ -58,8 +56,9 @@ export const Canvas = ({}) => {
       const ctx = canvas.getContext("2d");
       canvas.width = canvas.clientWidth;
       canvas.height = canvas.clientHeight;
-      const getCard = JSON.parse(localStorage.getItem("cards"));
-      if (getCard) {
+      const deckOfCards = JSON.parse(localStorage.getItem("deckOfCards")) || {};
+      const getCard = deckOfCards[deckName];
+      if (getCard && getCard[cardId]) {
         const savedCanvasData = getCard[cardId].back.canvas;
         const img = new Image();
         img.src = savedCanvasData;

@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { Card } from "./Flashcard/Card";
 import "../styles/dashboard.css";
-import { CardControls } from "./Flashcard/Controls/CardControls";
 import { CreateFlashCard } from "./CreateFlashCard/CreateFlashCard";
+import { DeckOfCards } from "./ShowDeckOfCards/DeckOfCards";
 
 export const Dashboard = () => {
   const [deckName, setDeckName] = useState("");
@@ -43,6 +42,9 @@ export const Dashboard = () => {
           </form>
         </section>
       )}
+      <section>
+        <DeckOfCards />
+      </section>
     </div>
   );
 };

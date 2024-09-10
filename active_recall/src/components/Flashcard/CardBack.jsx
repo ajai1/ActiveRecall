@@ -16,7 +16,7 @@ export const CardBack = () => {
     canvasMode,
     clearCanvas,
     eraserSelected,
-    setCardTextContent,
+    isDeckShowMode,
     setCanvasMode,
   } = useContext(CardCreatorContext);
   const { setClearCanvas, setEraserSelected } = useContext(CardCreatorContext);
@@ -29,6 +29,7 @@ export const CardBack = () => {
       <div
         className={`canvas_mode ${canvasMode ? "clicked" : ""}`}
         onClick={() => canvasModeClick()}
+        style={{ display: isDeckShowMode ? "none" : "block" }}
       >
         <img width="30px" src={DrawSvg}></img>
       </div>
