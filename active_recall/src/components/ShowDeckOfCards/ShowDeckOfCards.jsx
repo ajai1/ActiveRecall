@@ -6,7 +6,7 @@ export const ShowDeckOfCards = () => {
   const navigate = useNavigate();
   const [allDeckNames, setAllDeckNames] = useState([]);
 
-  const { isDeckShowMode, setDeckName, setIsDeckShowMode, setCardId } =
+  const { setDeckName, setIsDeckShowMode, setCardId } =
     useContext(CardCreatorContext);
 
   useEffect(() => {
@@ -23,10 +23,14 @@ export const ShowDeckOfCards = () => {
   };
 
   return (
-    <div style={{ display: isDeckShowMode ? "none" : "block" }}>
+    <div className="deck_grid_container">
       {allDeckNames.map((deckName) => {
         return (
-          <div onClick={() => handleDeckNameSelect(deckName)} key={deckName}>
+          <div
+            className="deck_grid_item"
+            onClick={() => handleDeckNameSelect(deckName)}
+            key={deckName}
+          >
             {deckName}
           </div>
         );

@@ -10,6 +10,7 @@ import PrevActive from "../../static/icons/prev_active.png";
 import NextActive from "../../static/icons/next_active.png";
 import PrevDisabled from "../../static/icons/prev_disabled.png";
 import NextDisabled from "../../static/icons/next_disabled.png";
+import { RecallControls } from "../Flashcard/Controls/recallControls";
 
 export const ShowSelectedDeck = () => {
   const {
@@ -26,9 +27,7 @@ export const ShowSelectedDeck = () => {
   const param = useParams();
 
   useEffect(() => {
-    console.log("Show the selected Deck ", param.deck_id, cardId);
     setDeckName(param.deck_id);
-    //setCardId(param.card_id);
     setIsDeckShowMode(true);
   }, [param.deck_id, param.card_id]);
 
@@ -56,24 +55,31 @@ export const ShowSelectedDeck = () => {
   return (
     <div className="deck_card_container">
       <div className="deck_card">
-        <div className={`deck_control`} onClick={() => handleCardID("prev")}>
+        <div
+          className={`deck_navigate_control`}
+          onClick={() => handleCardID("prev")}
+        >
           <img
             width={"30px"}
             src={cardId == 0 ? PrevDisabled : PrevActive}
           ></img>
         </div>
         <Card></Card>
-        <div className={`deck_control`} onClick={() => handleCardID("next")}>
+        <div
+          className={`deck_navigate_control`}
+          onClick={() => handleCardID("next")}
+        >
           <img
             width={"30px"}
             src={cardId >= noOfCardsInThisDeck - 1 ? NextDisabled : NextActive}
           ></img>
         </div>
       </div>
-      <div>
+      <div className="deck_controls_container">
         <section className="card_controls">
           <CardControls deckName={deckName}></CardControls>
         </section>
+        <RecallControls></RecallControls>
       </div>
     </div>
   );

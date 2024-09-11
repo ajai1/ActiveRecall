@@ -1,0 +1,29 @@
+.recall_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 80%;
+}
+
+.recall_controls {
+  font-weight: 600;
+  padding: 10px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.recall_controls:hover {
+  box-shadow: 1px 1px 5px #271b1b;
+  color: white;
+}
+
+.know_very_well {
+  background-color: #a9b388;
+}
+.little_confusing {
+  background-color: #b99470;
+}
+.dont_know {
+  background-color: #606676;
+}

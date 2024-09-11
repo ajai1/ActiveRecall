@@ -1,5 +1,6 @@
 import { createContext, useState, useRef, useEffect } from "react";
 import { useSaveToLocalStorage } from "../hooks/saveToStorage";
+import { filterOutRecallCards, shuffleAndDuplicate } from "../utils/Utilities";
 
 export const CardCreatorContext = createContext({});
 
@@ -16,6 +17,11 @@ export const CardCreatorContextProvider = ({ children }) => {
   const [showBackCard, setShowBackCard] = useState(false);
   const [isDeckShowMode, setIsDeckShowMode] = useState(false);
   const [noOfCardsInThisDeck, setNoOfCardsInThisDeck] = useState(0);
+  const [recallCards, setRecallCards] = useState([]);
+  const [knowVeryWell, setKnowVeryWell] = useState([]);
+  const [littleConfusing, setLittleConfusing] = useState([]);
+  const [dontKnow, setDontKnow] = useState([]);
+  const [cardRecallState, setCardRecallState] = useState(1);
 
   const editorRef = useRef(null);
   const cardTextContent = useRef("");
@@ -71,6 +77,17 @@ export const CardCreatorContextProvider = ({ children }) => {
     }
   };
 
+  const resetRecallStates = () => {
+    const deckOfCards = JSON.parse(localStorage.getItem("deckOfCards")) || {};
+    const allCardsFromDeck = deckOfCards[deckName];
+    for (let i = 0; i < allCardsFromDeck.length; i++) {
+      allCardsFromDeck[i].recall = 1;
+      allCardsFromDeck[i].uid = i;
+    }
+    deckOfCards[deckName] = allCardsFromDeck;
+    localStorage.setItem("deckOfCards", JSON.stringify(deckOfCards));
+  };
+
   useEffect(() => {
     const deckOfCards = JSON.parse(localStorage.getItem("deckOfCards")) || {};
     if (deckOfCards[deckName] && !isDeckShowMode) {
@@ -82,10 +99,35 @@ export const CardCreatorContextProvider = ({ children }) => {
     if (isDeckShowMode && deckName) {
       const deckOfCards = JSON.parse(localStorage.getItem("deckOfCards")) || {};
       const allCardsFromDeck = deckOfCards[deckName];
-      setNoOfCardsInThisDeck(allCardsFromDeck.length);
+      const { knowVeryWell, littleConfusing, dontKnow } =
+        filterOutRecallCards(allCardsFromDeck);
+      setKnowVeryWell(knowVeryWell);
+      setLittleConfusing(littleConfusing);
+      setDontKnow(dontKnow);
+      const recallCards = shuffleAndDuplicate(
+        knowVeryWell,
+        littleConfusing,
+        dontKnow
+      );
+      setRecallCards(recallCards);
+      setNoOfCardsInThisDeck(recallCards.length);
+    }
+  }, [isDeckShowMode, deckName]);
 
-      const card = allCardsFromDeck[cardId];
+  useEffect(() => {
+    if (isDeckShowMode && deckName && recallCards.length > 0) {
+      console.log(
+        "RECALL ----- ",
+        recallCards.map((each) => ({
+          header: each.front?.header ? each.front.header : "none",
+          recall: each.recall,
+        })),
+        cardId
+      );
+
+      const card = recallCards[cardId];
       if (card) {
+        setCardRecallState(card.recall);
         const front = card.front;
         if (front) {
           setHeader(front.header);
@@ -95,12 +137,16 @@ export const CardCreatorContextProvider = ({ children }) => {
         setEditorContents(back);
       }
     }
-  }, [isDeckShowMode, cardId, deckName]);
+  }, [cardId, recallCards]);
 
   useEffect(() => {
     if (!isDeckShowMode) {
       resetStates();
     }
+
+    return () => {
+      setCardId(0);
+    };
   }, [isDeckShowMode]);
 
   useSaveToLocalStorage({
@@ -132,6 +178,11 @@ export const CardCreatorContextProvider = ({ children }) => {
     header,
     briefStatement,
     isDeckShowMode,
+    recallCards,
+    knowVeryWell,
+    littleConfusing,
+    dontKnow,
+    cardRecallState,
     setDeckName,
     setCardId,
     setBriefStatement,
@@ -145,6 +196,12 @@ export const CardCreatorContextProvider = ({ children }) => {
     setShowBackCard,
     setIsDeckShowMode,
     resetStates,
+    setRecallCards,
+    setDontKnow,
+    setLittleConfusing,
+    setKnowVeryWell,
+    setNoOfCardsInThisDeck,
+    setCardRecallState,
   };
 
   return (

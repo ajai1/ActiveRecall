@@ -73,6 +73,7 @@ export const useSaveToLocalStorage = ({
       const dataSet = {
         front: cardFront,
         back: { canvas: cardBack.canvasData, text: cardBack.textData },
+        recall: 1,
       };
       cards.push(dataSet);
       deckOfCards[deckName] = cards;

@@ -5,6 +5,9 @@ import { useNavigate } from "react-router-dom";
 import "../../../styles/flashcard/controls/cardcontrols.css";
 import { CardCreatorContext } from "../../../contexts/card-creator-context";
 
+import FlipIcon from "../../../static/icons/flip.png";
+import AddCardIcon from "../../../static/icons/addcard.png";
+
 export const CardControls = () => {
   const {
     setIsAddCardDetails,
@@ -16,23 +19,29 @@ export const CardControls = () => {
   const navigate = useNavigate();
 
   const goBack = () => {
-    if (isDeckShowMode) {
+    navigate(-1);
+    return;
+    /*     if (isDeckShowMode) {
       navigate("/deck-of-cards");
       setIsDeckShowMode(false);
     } else {
       navigate("/create");
-    }
+    } */
   };
 
   return (
     <div className="card_control_container">
-      <button onClick={() => setShowBackCard((prev) => !prev)}>FlipCard</button>
+      <div
+        style={{ marginRight: "5px" }}
+        onClick={() => setShowBackCard((prev) => !prev)}
+      >
+        <img width={"30px"} src={FlipIcon}></img>
+      </div>
       {!isDeckShowMode && (
-        <button onClick={() => setIsAddCardDetails((prev) => !prev)}>
-          Save
-        </button>
+        <div onClick={() => setIsAddCardDetails((prev) => !prev)}>
+          <img width={"30px"} src={AddCardIcon}></img>
+        </div>
       )}
-      <button onClick={() => goBack()}>Go Back</button>
     </div>
   );
 };
