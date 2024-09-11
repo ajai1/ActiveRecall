@@ -118,3 +118,17 @@
   flex-direction: column;
   align-items: center;
 }
+
+.deck_card {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.deck_control {
+  margin: 10px;
+}
+
+.deck_control:hover {
+  cursor: pointer;
+}
