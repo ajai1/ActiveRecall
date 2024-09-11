@@ -110,9 +110,11 @@
   background-color: bisque;
 }
 
-.deck_card_container {
+.deck_card_container,
+.card_create_container {
+  height: 80%;
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   flex-direction: column;
   align-items: center;
 }

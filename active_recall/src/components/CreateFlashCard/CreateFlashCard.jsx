@@ -16,13 +16,13 @@ export const CreateFlashCard = () => {
   }, [param.deck_id]);
 
   return (
-    <>
+    <div className="card_create_container">
       <section className="card_section">
         <Card deckName={deckName} />
       </section>
       <section className="card_controls">
         <CardControls deckName={deckName}></CardControls>
       </section>
-    </>
+    </div>
   );
 };
