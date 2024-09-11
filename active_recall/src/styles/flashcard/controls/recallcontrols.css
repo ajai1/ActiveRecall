@@ -11,6 +11,7 @@
   padding: 10px;
   margin-right: 5px;
   cursor: pointer;
+  border-radius: 5px;
 }
 
 .recall_controls:hover {
@@ -19,11 +20,11 @@
 }
 
 .know_very_well {
-  background-color: #a9b388;
+  background-color: #b9d06c;
 }
 .little_confusing {
-  background-color: #b99470;
+  background-color: #edbb4e;
 }
 .dont_know {
-  background-color: #606676;
+  background-color: #c46152;
 }

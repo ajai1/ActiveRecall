@@ -21,16 +21,21 @@ export const CreateNewDeck = () => {
     <>
       <section>
         <h3>Create a new Deck</h3>
-        <form onSubmit={(e) => handleFormSubmit(e)} autoComplete="off">
+        <form
+          style={{ textAlign: "left" }}
+          onSubmit={(e) => handleFormSubmit(e)}
+          autoComplete="off"
+        >
           <label htmlFor="deckNameInput">Deck name</label>
           <input
+            id="deckNameInput"
             type="text"
             name="deckNameInput"
             required
             pattern=".*\S.*"
             title="Enter a deck name"
           ></input>
-          <input type="submit" value={"Create"}></input>
+          <input id="deckNameSubmit" type="submit" value={"Create"}></input>
         </form>
       </section>
     </>

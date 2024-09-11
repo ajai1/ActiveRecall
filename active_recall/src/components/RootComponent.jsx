@@ -19,7 +19,9 @@ export const RootComponent = () => {
           <Outlet />
         </div>
         <footer className="grid_item">
-          <button onClick={() => navigate(-1)}>Go Back</button>
+          <div className="goback_btn" onClick={() => navigate(-1)}>
+            Go Back
+          </div>
         </footer>
       </div>
     </CardCreatorContextProvider>
