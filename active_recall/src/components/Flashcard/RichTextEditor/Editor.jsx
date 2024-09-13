@@ -1,22 +1,13 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import ReactQuill from "react-quill";
-import EditorToolbar, {
-  modules,
-  formats,
-  noToolbarModules,
-} from "./EditorToolbar";
+import EditorToolbar, { modules, formats } from "./EditorToolbar";
 import "react-quill/dist/quill.snow.css";
-import { CardCreatorContext } from "../../../contexts/card-creator-context";
 import "../../../styles/flashcard/editor.css";
+import { CardContext } from "../../../contexts/card-context";
 
 export const Editor = () => {
-  const {
-    isDeckShowMode,
-    cardId,
-    canvasMode,
-    cardTextContent,
-    setCardTextContent,
-  } = useContext(CardCreatorContext);
+  const { editMode, cardId, canvasMode, textContent, setTextContent } =
+    useContext(CardContext);
 
   const quillRef = useRef(null); // Ref for accessing the Quill editor instance
 
@@ -27,26 +18,18 @@ export const Editor = () => {
     }
   }, [cardId]);
 
-  const editorChangeHandler = (e) => {
-    if (isDeckShowMode) {
-      return;
-    } else {
-      setCardTextContent(e);
-    }
-  };
-
   return (
     <div className="text-editor" style={{ zIndex: canvasMode ? 0 : 1 }}>
-      <EditorToolbar canvasMode={canvasMode} isDeckShowMode={isDeckShowMode} />
+      <EditorToolbar canvasMode={canvasMode} editMode={editMode} />
       <ReactQuill
         ref={quillRef}
         theme="snow"
-        value={cardTextContent.current}
-        onChange={setCardTextContent}
-        placeholder={isDeckShowMode ? "" : "Write something awesome..."}
+        value={textContent.current}
+        onChange={setTextContent}
+        placeholder={!editMode ? "" : "Write something awesome..."}
         modules={modules}
         formats={formats}
-        readOnly={isDeckShowMode}
+        readOnly={!editMode}
       />
     </div>
   );

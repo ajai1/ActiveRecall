@@ -1,38 +1,55 @@
 import React, { useContext, useEffect, useState } from "react";
-import { CardCreatorContext } from "../../contexts/card-creator-context";
 import { useNavigate } from "react-router-dom";
-import { getLocalStorage } from "../../utils/localStorageService";
+import { ENDPOINTS } from "../../constants/apiConstants";
+import { CardContext } from "../../contexts/card-context";
 
 export const ShowDeckOfCards = () => {
   const navigate = useNavigate();
   const [allDeckNames, setAllDeckNames] = useState([]);
+  const [allDecks, setAllDecks] = useState([]);
 
-  const { setDeckName, setIsDeckShowMode, setCardId } =
-    useContext(CardCreatorContext);
+  const {
+    setDeckname,
+    setEditMode,
+    setCurrentCardId,
+    setCardsFromSelectedDeck,
+    generateRecallCards,
+  } = useContext(CardContext);
 
+  //Select the deck and store cards
   useEffect(() => {
-    const getAllDeck = getLocalStorage("deckOfCards") || {};
-    setAllDeckNames(Object.keys(getAllDeck));
-    setIsDeckShowMode(false);
+    async function getDeckForUser(username) {
+      const url = ENDPOINTS.DECKS.GET_ALL_DECKS.endpoint(username);
+      const method = ENDPOINTS.DECKS.GET_ALL_DECKS.method;
+      const response = await fetch(url, { method });
+      const data = await response.json();
+      console.log("ALL DECKS ", data);
+      setAllDecks(data);
+      return "";
+    }
+    getDeckForUser("ajai");
+    setEditMode(false);
   }, []);
 
-  const handleDeckNameSelect = (deckName) => {
-    setDeckName(deckName);
-    setIsDeckShowMode(true);
-    setCardId(0);
-    navigate(`/deck-of-cards/${deckName}`);
+  const handleDeckNameSelect = (deck) => {
+    setCardsFromSelectedDeck(deck.cards);
+    generateRecallCards();
+    setDeckname(deck.deckname);
+    setEditMode(false);
+    setCurrentCardId(0);
+    navigate(`/deck-of-cards/${deck.deckname}`);
   };
 
   return (
     <div className="deck_grid_container">
-      {allDeckNames.map((deckName) => {
+      {allDecks.map((eachDeck) => {
         return (
           <div
             className="deck_grid_item"
-            onClick={() => handleDeckNameSelect(deckName)}
-            key={deckName}
+            onClick={() => handleDeckNameSelect(eachDeck)}
+            key={eachDeck.id}
           >
-            {deckName}
+            {eachDeck.deckname}
           </div>
         );
       })}

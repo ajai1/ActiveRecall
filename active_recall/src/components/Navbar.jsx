@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 
 import "../styles/Navbar.css";
 import { CardCreatorContext } from "../contexts/card-creator-context";
+import { CardContext } from "../contexts/card-context";
 
 export const Navbar = () => {
-  const { setIsDeckShowMode } = useContext(CardCreatorContext);
+  const { setEditMode, setCanvasMode } = useContext(CardContext);
   return (
     <div>
       <nav className="navbar">
@@ -13,7 +14,8 @@ export const Navbar = () => {
           className="nav_items"
           to={"/"}
           onClick={() => {
-            setIsDeckShowMode(false);
+            setEditMode(false);
+            setCanvasMode(false);
           }}
         >
           Home

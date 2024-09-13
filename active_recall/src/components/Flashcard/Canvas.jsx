@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import "../../styles/flashcard/flashcard.css";
-import { CardCreatorContext } from "../../contexts/card-creator-context";
 import { getLocalStorage } from "../../utils/localStorageService";
+import { CardContext } from "../../contexts/card-context";
 
 export const Canvas = ({}) => {
-  const {
+  /*  const {
     deckName,
     cardId,
     canvasMode,
@@ -15,6 +15,16 @@ export const Canvas = ({}) => {
     color,
     canvasRef,
   } = useContext(CardCreatorContext);
+ */
+  const {
+    currentCardId,
+    canvasMode,
+    clearCanvas,
+    setClearCanvas,
+    eraserSelected,
+    color,
+    canvasRef,
+  } = useContext(CardContext);
 
   const [lineSize, setLineSize] = useState(1);
   const [lastX, setLastX] = useState(0);
@@ -28,7 +38,7 @@ export const Canvas = ({}) => {
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
     return () => window.removeEventListener("resize", resizeCanvas);
-  }, [cardId]);
+  }, [currentCardId, canvasMode]);
 
   //Clear Canvas
   useEffect(() => {
@@ -50,16 +60,25 @@ export const Canvas = ({}) => {
     ctx.clearRect(x - 30 / 2, y - 30 / 2, 30, 30);
   };
 
-  // load from local storage canvasData
+  // load from DB canvasData
   const resizeCanvas = () => {
     const canvas = canvasRef.current;
     if (canvas) {
       const ctx = canvas.getContext("2d");
       canvas.width = canvas.clientWidth;
       canvas.height = canvas.clientHeight;
+    }
+  };
+
+  const resizeCanvasUsingLocalStorage = () => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext("2d");
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
       const deckOfCards = getLocalStorage("deckOfCards") || {};
-      const getCard = deckOfCards[deckName];
-      if (getCard && getCard[cardId]) {
+      //const getCard = deckOfCards[deckName];
+      /*       if (getCard && getCard[cardId]) {
         const savedCanvasData = getCard[cardId].back.canvas;
         const img = new Image();
         img.src = savedCanvasData;
@@ -67,14 +86,8 @@ export const Canvas = ({}) => {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           ctx.drawImage(img, 0, 0);
         };
-      }
+      } */
     }
-  };
-
-  const saveCanvasData = () => {
-    const canvas = canvasRef.current;
-    const dataURL = canvas.toDataURL();
-    localStorage.setItem("canvasData", dataURL);
   };
 
   //Event Handlers ################################################################################################

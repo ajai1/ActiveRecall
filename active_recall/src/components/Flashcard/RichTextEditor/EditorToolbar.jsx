@@ -82,11 +82,11 @@ export const formats = [
 ];
 
 // Quill Toolbar component
-export const QuillToolbar = ({ canvasMode, isDeckShowMode }) => {
+export const QuillToolbar = ({ canvasMode, editMode }) => {
   return (
     <div
       id="toolbar"
-      style={{ display: canvasMode || isDeckShowMode ? "none" : "block" }}
+      style={{ display: canvasMode || !editMode ? "none" : "block" }}
     >
       <span className="ql-formats">
         <select className="ql-size" defaultValue="medium">

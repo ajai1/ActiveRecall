@@ -23,6 +23,7 @@ export const CardCreatorContextProvider = ({ children }) => {
   const [littleConfusing, setLittleConfusing] = useState([]);
   const [dontKnow, setDontKnow] = useState([]);
   const [cardRecallState, setCardRecallState] = useState(1);
+  const [allCardsFromSelectedDeck, setAllCardsFromSelectedDeck] = useState([]);
 
   const editorRef = useRef(null);
   const cardTextContent = useRef("");
@@ -97,11 +98,10 @@ export const CardCreatorContextProvider = ({ children }) => {
   }, [deckName, isDeckShowMode]);
 
   useEffect(() => {
-    if (isDeckShowMode && deckName) {
-      const deckOfCards = getLocalStorage("deckOfCards") || {};
-      const allCardsFromDeck = deckOfCards[deckName];
-      const { knowVeryWell, littleConfusing, dontKnow } =
-        filterOutRecallCards(allCardsFromDeck);
+    if (isDeckShowMode && deckName && allCardsFromSelectedDeck.length > 0) {
+      const { knowVeryWell, littleConfusing, dontKnow } = filterOutRecallCards(
+        allCardsFromSelectedDeck
+      );
       setKnowVeryWell(knowVeryWell);
       setLittleConfusing(littleConfusing);
       setDontKnow(dontKnow);
@@ -110,17 +110,19 @@ export const CardCreatorContextProvider = ({ children }) => {
         littleConfusing,
         dontKnow
       );
+
+      console.log("RECALL CARDSSS ", recallCards);
       setRecallCards(recallCards);
       setNoOfCardsInThisDeck(recallCards.length);
     }
-  }, [isDeckShowMode, deckName]);
+  }, [allCardsFromSelectedDeck, isDeckShowMode, deckName]);
 
   useEffect(() => {
     if (isDeckShowMode && deckName && recallCards.length > 0) {
       console.log(
         "RECALL ----- ",
         recallCards.map((each) => ({
-          header: each.front?.header ? each.front.header : "none",
+          header: each?.header ? each.header : "none",
           recall: each.recall,
         })),
         cardId
@@ -129,13 +131,9 @@ export const CardCreatorContextProvider = ({ children }) => {
       const card = recallCards[cardId];
       if (card) {
         setCardRecallState(card.recall);
-        const front = card.front;
-        if (front) {
-          setHeader(front.header);
-          setBriefStatement(front.briefStatement);
-        }
-        const back = card.back;
-        setEditorContents(back);
+        setHeader(card.header);
+        setBriefStatement(card.briefstatement);
+        setCardTextContent(card.text);
       }
     }
   }, [cardId, recallCards, isDeckShowMode]);
@@ -184,6 +182,8 @@ export const CardCreatorContextProvider = ({ children }) => {
     littleConfusing,
     dontKnow,
     cardRecallState,
+    allCardsFromSelectedDeck,
+    setAllCardsFromSelectedDeck,
     setDeckName,
     setCardId,
     setBriefStatement,

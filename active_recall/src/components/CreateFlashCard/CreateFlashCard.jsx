@@ -1,27 +1,29 @@
 import React, { useContext, useEffect } from "react";
 import { CardControls } from "../Flashcard/Controls/CardControls";
 import { Card } from "../Flashcard/Card";
-import {
-  CardCreatorContext,
-  CardCreatorContextProvider,
-} from "../../contexts/card-creator-context";
 import { useParams } from "react-router-dom";
+import { CardContext } from "../../contexts/card-context";
 
 export const CreateFlashCard = () => {
-  const { deckName, setDeckName, setCardId } = useContext(CardCreatorContext);
+  const { deckname, setDeckname, setEditMode } = useContext(CardContext);
   const param = useParams();
+
   useEffect(() => {
-    console.log("param", param.deck_id, param.card_id, deckName);
-    setDeckName(param.deck_id);
+    setEditMode(true);
+  }, []);
+
+  useEffect(() => {
+    console.log("param", param.deck_id, param.card_id, deckname);
+    setDeckname(param.deck_id);
   }, [param.deck_id]);
 
   return (
     <div className="card_create_container">
       <section className="card_section">
-        <Card deckName={deckName} />
+        <Card deckname={deckname} />
       </section>
       <section className="card_controls">
-        <CardControls deckName={deckName}></CardControls>
+        <CardControls deckname={deckname}></CardControls>
       </section>
     </div>
   );

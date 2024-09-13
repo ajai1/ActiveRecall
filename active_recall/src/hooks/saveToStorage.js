@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getLocalStorage, setLocalStorage } from "../utils/localStorageService";
+import { ENDPOINTS } from "../constants/apiConstants";
 
 export const useSaveToLocalStorage = ({
   cardId,
@@ -14,6 +15,18 @@ export const useSaveToLocalStorage = ({
   resetStates,
 }) => {
   const navigate = useNavigate();
+
+  const getCardData = () => {
+    const { imageData, textData } = getCardBackData();
+    const cardData = {
+      header: header,
+      briefstatement: briefStatement,
+      text: textData,
+      recall: 1,
+    };
+
+    return getCardData();
+  };
 
   const getCardFrontData = (data) => {
     const cardFrontStorage = {};
@@ -59,7 +72,7 @@ export const useSaveToLocalStorage = ({
     };
   };
 
-  const setCardData = (data) => {
+  const setCardData = () => {
     if (cardTextContent.current.length > 0) {
       let div = document.createElement("div");
       div.innerHTML = cardTextContent.current;
@@ -85,7 +98,7 @@ export const useSaveToLocalStorage = ({
 
   useEffect(() => {
     if (isAddCardDetails) {
-      setCardData();
+      // setCardData();
       console.log("SAVED CARD DATA !!!");
       resetStates();
       const pathTo = `/create/${deckName}`;

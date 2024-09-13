@@ -1,6 +1,5 @@
 import React, { useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { CardCreatorContext } from "../../contexts/card-creator-context";
 import { Card } from "../Flashcard/Card";
 import { CardControls } from "../Flashcard/Controls/CardControls";
 import "../../styles/flashcard/controls/cardcontrols.css";
@@ -11,43 +10,63 @@ import NextActive from "../../static/icons/next_active.png";
 import PrevDisabled from "../../static/icons/prev_disabled.png";
 import NextDisabled from "../../static/icons/next_disabled.png";
 import { RecallControls } from "../Flashcard/Controls/recallControls";
+import { CardContext } from "../../contexts/card-context";
+import { ENDPOINTS, HEADERS } from "../../constants/apiConstants";
 
 export const ShowSelectedDeck = () => {
   const {
-    cardId,
-    deckName,
-    noOfCardsInThisDeck,
-    setDeckName,
-    setCardId,
-    setIsDeckShowMode,
-    showBackCard,
-    resetStates,
-  } = useContext(CardCreatorContext);
+    currentCardId,
+    deckname,
+    setDeckname,
+    setCurrentCardId,
+    setEditMode,
+    flipCard,
+    resetTheCard,
+    setCardsFromSelectedDeck,
+    recallCards,
+    generateRecallCards,
+  } = useContext(CardContext);
 
   const param = useParams();
 
   useEffect(() => {
-    setDeckName(param.deck_id);
-    setIsDeckShowMode(true);
+    console.log("SHOW DECK !!!! ", param.deck_id);
+    const url = ENDPOINTS.DECKS.GET_DECK_BY_NAME.endpoint(
+      "ajai",
+      param.deck_id
+    );
+    fetch(url, {
+      method: ENDPOINTS.DECKS.GET_DECK_BY_NAME.method,
+      headers: HEADERS,
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        console.log("LOADED CARDS ", json.cards);
+        setCardsFromSelectedDeck(json.cards);
+        setDeckname(param.deck_id);
+        setEditMode(false);
+        generateRecallCards();
+        setCurrentCardId(0);
+      });
   }, [param.deck_id, param.card_id]);
 
   const handleCardID = (type) => {
-    if (cardId >= noOfCardsInThisDeck - 1 && type == "next") return;
-    if (cardId == 0 && type == "prev") return;
-    resetStates();
-    if (showBackCard) {
+    if (currentCardId >= recallCards.length - 1 && type == "next") return;
+    if (currentCardId == 0 && type == "prev") return;
+    resetTheCard();
+    if (flipCard) {
       setTimeout(() => {
         if (type == "prev") {
-          setCardId((prev) => prev - 1);
+          setCurrentCardId((prev) => prev - 1);
         } else {
-          setCardId((prev) => prev + 1);
+          setCurrentCardId((prev) => prev + 1);
         }
       }, 250);
     } else {
       if (type == "prev") {
-        setCardId((prev) => prev - 1);
+        setCurrentCardId((prev) => prev - 1);
       } else {
-        setCardId((prev) => prev + 1);
+        setCurrentCardId((prev) => prev + 1);
       }
     }
   };
@@ -61,7 +80,7 @@ export const ShowSelectedDeck = () => {
         >
           <img
             width={"30px"}
-            src={cardId == 0 ? PrevDisabled : PrevActive}
+            src={currentCardId == 0 ? PrevDisabled : PrevActive}
           ></img>
         </div>
         <Card></Card>
@@ -71,13 +90,17 @@ export const ShowSelectedDeck = () => {
         >
           <img
             width={"30px"}
-            src={cardId >= noOfCardsInThisDeck - 1 ? NextDisabled : NextActive}
+            src={
+              currentCardId >= recallCards.length - 1
+                ? NextDisabled
+                : NextActive
+            }
           ></img>
         </div>
       </div>
       <div className="deck_controls_container">
         <section className="card_controls">
-          <CardControls deckName={deckName}></CardControls>
+          <CardControls deckname={deckname}></CardControls>
         </section>
         <RecallControls></RecallControls>
       </div>

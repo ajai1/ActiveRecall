@@ -1,73 +1,97 @@
 import React, { useContext } from "react";
 import "../../../styles/flashcard/controls/recallcontrols.css";
-import { CardCreatorContext } from "../../../contexts/card-creator-context";
 import { recallChanges, shuffle } from "../../../utils/Utilities";
-import { getLocalStorage } from "../../../utils/localStorageService";
+import { ENDPOINTS, HEADERS } from "../../../constants/apiConstants";
+import { CardContext } from "../../../contexts/card-context";
 
 export const RecallControls = () => {
   const {
-    cardId,
+    currentCardId,
     recallCards,
     setRecallCards,
-    deckName,
-    setCardId,
+    deckname,
+    setCurrentCardId,
     knowVeryWell,
     littleConfusing,
     dontKnow,
     setDontKnow,
     setLittleConfusing,
     setKnowVeryWell,
-    setNoOfCardsInThisDeck,
-  } = useContext(CardCreatorContext);
+  } = useContext(CardContext);
 
+  const recallAPICall = (cardRecallToModify) => {
+    const url = ENDPOINTS.CARDS.UPDATE_CARD.endpoint("ajai", deckname);
+    fetch(url, {
+      method: ENDPOINTS.CARDS.UPDATE_CARD.method,
+      headers: HEADERS,
+      body: JSON.stringify(cardRecallToModify),
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        console.log("UPDATED !!!", json);
+      });
+  };
+
+  /*   const recallCalculator = (handleType, modifyRecallCards) => {
+    let dKCards = [...dontKnow];
+    let lKCards = [...littleConfusing];
+    let kCards = [...knowVeryWell];
+    let changeFactor = recallChanges(
+      modifyRecallCards[currentCardId].recall,
+      handleType
+    );
+  };
+ */
   const recallHandler = (handleType) => {
     let modifyRecallCards = [...recallCards];
+    console.log("MODIFY RECALL CARD", modifyRecallCards);
     let dKCards = dontKnow.length == 0 ? [] : [...dontKnow];
     let lKCards = littleConfusing.length == 0 ? [] : [...littleConfusing];
     let kCards = knowVeryWell.length == 0 ? [] : [...knowVeryWell];
     let changeFactor = recallChanges(
-      modifyRecallCards[cardId].recall,
+      modifyRecallCards[currentCardId].recall,
       handleType
     );
-
-    if (modifyRecallCards[cardId].recall == 3) {
+    // remove from the deck, later we will align to the correct recall deck
+    if (modifyRecallCards[currentCardId].recall == 3) {
       dKCards = dKCards.filter(
-        (card) => card.uid != modifyRecallCards[cardId].uid
+        (card) => card.uid != modifyRecallCards[currentCardId].uid
       );
-    } else if (modifyRecallCards[cardId].recall == 2) {
+    } else if (modifyRecallCards[currentCardId].recall == 2) {
       lKCards = lKCards.filter(
-        (card) => card.uid != modifyRecallCards[cardId].uid
+        (card) => card.uid != modifyRecallCards[currentCardId].uid
       );
-    } else if (modifyRecallCards[cardId].recall == 1) {
+    } else if (modifyRecallCards[currentCardId].recall == 1) {
       kCards = kCards.filter(
-        (card) => card.uid != modifyRecallCards[cardId].uid
+        (card) => card.uid != modifyRecallCards[currentCardId].uid
       );
     }
-    modifyRecallCards[cardId].recall = handleType;
+    if (modifyRecallCards[currentCardId].recall != handleType) {
+      modifyRecallCards[currentCardId].recall = handleType;
+      recallAPICall(modifyRecallCards[currentCardId]);
+    }
+
     if (handleType == 3) {
-      dKCards.push(modifyRecallCards[cardId]);
+      dKCards.push(modifyRecallCards[currentCardId]);
     } else if (handleType == 2) {
-      lKCards.push(modifyRecallCards[cardId]);
+      lKCards.push(modifyRecallCards[currentCardId]);
     } else if (handleType == 1) {
-      kCards.push(modifyRecallCards[cardId]);
+      kCards.push(modifyRecallCards[currentCardId]);
     }
     setLittleConfusing(lKCards);
     setDontKnow(dKCards);
     setKnowVeryWell(kCards);
-    const deckOfCards = getLocalStorage("deckOfCards") || {};
-    deckOfCards[deckName] = [...dKCards, ...lKCards, ...kCards];
-    localStorage.setItem("deckOfCards", JSON.stringify(deckOfCards));
 
-    let firstHalf = modifyRecallCards.slice(0, cardId + 1);
+    let firstHalf = modifyRecallCards.slice(0, currentCardId + 1);
     let secondHalf = modifyRecallCards.slice(
-      cardId + 1,
+      currentCardId + 1,
       modifyRecallCards.length
     );
     if (changeFactor < 0) {
       //remove
       while (changeFactor < 0) {
         const index = secondHalf.findIndex(
-          (card) => card.uid == modifyRecallCards[cardId].uid
+          (card) => card.uid == modifyRecallCards[currentCardId].uid
         );
         if (index != -1) {
           secondHalf.splice(index, 1);
@@ -80,15 +104,18 @@ export const RecallControls = () => {
       for (let i = 0; i < changeFactor; i++) {
         let randomPlaceOfInsertion =
           Math.floor(Math.random() * (secondHalf.length - 0)) + 0;
-        secondHalf.splice(randomPlaceOfInsertion, 0, modifyRecallCards[cardId]);
+        secondHalf.splice(
+          randomPlaceOfInsertion,
+          0,
+          modifyRecallCards[currentCardId]
+        );
       }
     }
     secondHalf = shuffle(secondHalf);
     modifyRecallCards = [...firstHalf, ...secondHalf];
     setRecallCards(modifyRecallCards);
-    setNoOfCardsInThisDeck(modifyRecallCards.length);
-    if (cardId < modifyRecallCards.length - 1) {
-      setCardId((prev) => prev + 1);
+    if (currentCardId < modifyRecallCards.length - 1) {
+      setCurrentCardId((prev) => prev + 1);
     }
   };
 

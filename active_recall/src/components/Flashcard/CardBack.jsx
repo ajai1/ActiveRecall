@@ -1,25 +1,19 @@
-import React, { useContext, useState, useEffect } from "react";
-import ReactQuill from "react-quill";
+import React, { useContext } from "react";
 import "react-quill/dist/quill.snow.css";
 
 import { Canvas } from "./Canvas";
-import { CardCreatorContext } from "../../contexts/card-creator-context";
 import { Editor } from "./RichTextEditor/Editor";
 
 import "../../styles/flashcard/flashcard.css";
 
 import DrawSvg from "../../static/icons/draw.svg";
 import { CanvasControls } from "./Controls/CanvasControls";
+import { CardContext } from "../../contexts/card-context";
 
 export const CardBack = () => {
-  const {
-    canvasMode,
-    clearCanvas,
-    eraserSelected,
-    isDeckShowMode,
-    setCanvasMode,
-  } = useContext(CardCreatorContext);
-  const { setClearCanvas, setEraserSelected } = useContext(CardCreatorContext);
+  const { canvasMode, editMode } = useContext(CardContext);
+  const { setCanvasMode } = useContext(CardContext);
+
   function canvasModeClick() {
     setCanvasMode((prev) => !prev);
   }
@@ -27,25 +21,19 @@ export const CardBack = () => {
   return (
     <>
       <div
-        className={`canvas_mode ${canvasMode ? "clicked" : ""}`}
+        className={`canvas_mode ${editMode ? "clicked" : ""}`}
         onClick={() => canvasModeClick()}
-        style={{ display: isDeckShowMode ? "none" : "block" }}
+        style={{ display: !editMode ? "none" : "block" }}
       >
         <img width="30px" src={DrawSvg}></img>
       </div>
       <Editor />
       <div className="flashcard_content_container">
-        <Canvas
-          canvasMode={canvasMode}
-          clearCanvas={clearCanvas}
-          setClearCanvas={setClearCanvas}
-          eraserSelected={eraserSelected}
-          setEraserSelected={setEraserSelected}
-        ></Canvas>
+        <Canvas></Canvas>
       </div>
       <div
         className={`canvas_controls ${
-          canvasMode ? "" : "hide_canvas_controls"
+          !editMode || canvasMode ? "" : "hide_canvas_controls"
         }`}
       >
         <CanvasControls></CanvasControls>

@@ -1,15 +1,18 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import "../../styles/flashcard/flashcard.css";
-import { CardCreatorContext } from "../../contexts/card-creator-context";
+import { CardContext } from "../../contexts/card-context";
 
 export const CardFront = () => {
-  const {
+  /*   const {
     isDeckShowMode,
     header,
     briefStatement,
     setBriefStatement,
     setHeader,
-  } = useContext(CardCreatorContext);
+  } = useContext(CardCreatorContext); */
+
+  const { editMode, header, briefstatement } = useContext(CardContext);
+  const { setHeader, setBriefStatement } = useContext(CardContext);
 
   return (
     <>
@@ -20,16 +23,16 @@ export const CardFront = () => {
           value={header}
           onChange={(event) => setHeader(event.target.value)}
           type="text"
-          placeholder={!isDeckShowMode ? "Enter the Header" : ""}
-          readOnly={isDeckShowMode}
+          placeholder={editMode ? "Enter the Header" : ""}
+          readOnly={editMode ? false : true}
         ></input>
 
         <textarea
           className="flashcard_textarea"
-          placeholder={!isDeckShowMode ? "Enter the content" : ""}
-          value={briefStatement}
+          placeholder={editMode ? "Enter the content" : ""}
+          value={briefstatement}
           onChange={(event) => setBriefStatement(event.target.value)}
-          readOnly={isDeckShowMode}
+          readOnly={editMode ? false : true}
         ></textarea>
       </>
     </>

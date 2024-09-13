@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
-import { CardCreatorContext } from "../../contexts/card-creator-context";
 import { useNavigate } from "react-router-dom";
+import { ENDPOINTS } from "../../constants/apiConstants";
+import { CardContext } from "../../contexts/card-context";
 
 export const CreateNewDeck = () => {
-  const { setDeckName } = useContext(CardCreatorContext);
+  const { setDeckname, setEditMode } = useContext(CardContext);
   const navigate = useNavigate();
 
   const handleFormSubmit = (e) => {
@@ -13,9 +14,21 @@ export const CreateNewDeck = () => {
       alert("Enter a name");
       return;
     }
-    setDeckName(deckNameValue);
-    console.log("Setting Deck Name");
-    navigate(`/create/${deckNameValue}`);
+    const url = ENDPOINTS.DECKS.CREATE_DECK.endpoint("ajai");
+    fetch(url, {
+      method: ENDPOINTS.DECKS.CREATE_DECK.method,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        deckname: deckNameValue,
+      }),
+    }).then((response) => {
+      setDeckname(deckNameValue);
+      setEditMode(true);
+      console.log("Setting Deck Name");
+      navigate(`/create/${deckNameValue}`);
+    });
   };
   return (
     <>

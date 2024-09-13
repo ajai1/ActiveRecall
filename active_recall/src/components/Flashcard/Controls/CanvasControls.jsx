@@ -1,31 +1,19 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 
 import "../../../styles/flashcard/controls.css";
 import EraserSvg from "../../../static/icons/eraser.svg";
 import ClearCanvasPNG from "../../../static/icons/clearCanvas.png";
-import { CardCreatorContext } from "../../../contexts/card-creator-context";
+import { CardContext } from "../../../contexts/card-context";
 
 export const CanvasControls = () => {
-  const { eraserSelected, color, isDeckShowMode } =
-    useContext(CardCreatorContext);
-  const { setClearCanvas, setEraserSelected } = useContext(CardCreatorContext);
-  const { handleColorChange } = useContext(CardCreatorContext);
-  const [IconContainerStyles, setIconContainerStyles] = useState([
-    "icon_container",
-  ]);
-
-  useEffect(() => {
-    if (eraserSelected) {
-      setIconContainerStyles((prev) => [...prev, "icon_container_selected"]);
-    } else {
-      setIconContainerStyles((prev) => ["icon_container"]);
-    }
-  }, [eraserSelected]);
+  const { eraserSelected, color, editMode } = useContext(CardContext);
+  const { setClearCanvas, setEraserSelected, setColor } =
+    useContext(CardContext);
 
   return (
     <div
       className="canvas_controls_container"
-      style={{ display: isDeckShowMode ? "none" : "flex" }}
+      style={{ display: !editMode ? "none" : "flex" }}
     >
       <span
         className="control_container"
@@ -47,7 +35,7 @@ export const CanvasControls = () => {
         <input
           type="color"
           value={color}
-          onChange={handleColorChange}
+          onChange={(e) => setColor(e.target.value)}
           style={{ width: "30px" }}
         />
         Color

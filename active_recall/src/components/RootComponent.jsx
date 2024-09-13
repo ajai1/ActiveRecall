@@ -1,14 +1,14 @@
 import React from "react";
 import { Navbar } from "./Navbar";
 import { Outlet, useNavigate } from "react-router-dom";
-import { CardCreatorContextProvider } from "../contexts/card-creator-context";
 
 import "../styles/rootcomponent.css";
+import { CardContext, CardContextProvider } from "../contexts/card-context";
 
 export const RootComponent = () => {
   const navigate = useNavigate();
   return (
-    <CardCreatorContextProvider>
+    <CardContextProvider>
       <Navbar />
       <div className="grid_container">
         <header className="grid_item">
@@ -24,6 +24,6 @@ export const RootComponent = () => {
           </div>
         </footer>
       </div>
-    </CardCreatorContextProvider>
+    </CardContextProvider>
   );
 };

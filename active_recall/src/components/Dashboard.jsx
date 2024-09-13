@@ -1,7 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/dashboard.css";
-import { CardCreatorContextProvider } from "../contexts/card-creator-context";
 
 export const Dashboard = () => {
   const navigate = useNavigate();
@@ -13,7 +12,7 @@ export const Dashboard = () => {
     }
   };
   return (
-    <CardCreatorContextProvider>
+    <>
       <div
         className="dashboard_navs"
         onClick={() => dashboardNavigationHandler("create")}
@@ -26,6 +25,6 @@ export const Dashboard = () => {
       >
         Show Your Deck Of Cards
       </div>
-    </CardCreatorContextProvider>
+    </>
   );
 };
