@@ -23,7 +23,6 @@ export const ShowDeckOfCards = () => {
       const method = ENDPOINTS.DECKS.GET_ALL_DECKS.method;
       const response = await fetch(url, { method });
       const data = await response.json();
-      console.log("ALL DECKS ", data);
       setAllDecks(data);
       return "";
     }
@@ -33,7 +32,7 @@ export const ShowDeckOfCards = () => {
 
   const handleDeckNameSelect = (deck) => {
     setCardsFromSelectedDeck(deck.cards);
-    generateRecallCards();
+    //generateRecallCards();
     setDeckname(deck.deckname);
     setEditMode(false);
     setCurrentCardId(0);

@@ -27,9 +27,7 @@ export const RecallControls = () => {
       body: JSON.stringify(cardRecallToModify),
     })
       .then((res) => res.json())
-      .then((json) => {
-        console.log("UPDATED !!!", json);
-      });
+      .then((json) => {});
   };
 
   /*   const recallCalculator = (handleType, modifyRecallCards) => {
@@ -44,7 +42,6 @@ export const RecallControls = () => {
  */
   const recallHandler = (handleType) => {
     let modifyRecallCards = [...recallCards];
-    console.log("MODIFY RECALL CARD", modifyRecallCards);
     let dKCards = dontKnow.length == 0 ? [] : [...dontKnow];
     let lKCards = littleConfusing.length == 0 ? [] : [...littleConfusing];
     let kCards = knowVeryWell.length == 0 ? [] : [...knowVeryWell];

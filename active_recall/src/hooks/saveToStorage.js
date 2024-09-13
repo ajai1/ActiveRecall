@@ -99,7 +99,6 @@ export const useSaveToLocalStorage = ({
   useEffect(() => {
     if (isAddCardDetails) {
       // setCardData();
-      console.log("SAVED CARD DATA !!!");
       resetStates();
       const pathTo = `/create/${deckName}`;
       navigate(pathTo);

@@ -50,6 +50,7 @@ export const CardContextProvider = ({ children }) => {
 
   const generateRecallCards = () => {
     if (!editMode && cardsFromSelectedDeck.length > 0) {
+      console.log("GENERATE !!!");
       const { knowVeryWell, littleConfusing, dontKnow } = filterOutRecallCards(
         cardsFromSelectedDeck
       );
@@ -62,7 +63,6 @@ export const CardContextProvider = ({ children }) => {
         dontKnow
       );
       setRecallCards(recallCards);
-      console.log("SETTED RECALL CARDS = ", recallCards);
     }
   };
 
@@ -124,15 +124,18 @@ export const CardContextProvider = ({ children }) => {
 
   //Take the current Card from the deck set the states to show card
   useEffect(() => {
-    if (!editMode && recallCards.length > 1 && recallCards[currentCardId]) {
+    if (!editMode && recallCards.length > 0 && recallCards[currentCardId]) {
       const currentCard = recallCards[currentCardId];
-      console.log("CARD CHANGESS ", currentCard);
       setHeader(currentCard.header);
       setBriefStatement(currentCard.briefstatement);
       setTextContent(currentCard.text);
       setCardRecallState(currentCard.recall);
     }
   }, [recallCards, currentCardId]);
+
+  useEffect(() => {
+    generateRecallCards();
+  }, [cardsFromSelectedDeck]);
 
   return (
     <CardContext.Provider value={ctxValue}>{children}</CardContext.Provider>

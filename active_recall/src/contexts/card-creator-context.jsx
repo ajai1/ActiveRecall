@@ -111,7 +111,6 @@ export const CardCreatorContextProvider = ({ children }) => {
         dontKnow
       );
 
-      console.log("RECALL CARDSSS ", recallCards);
       setRecallCards(recallCards);
       setNoOfCardsInThisDeck(recallCards.length);
     }
@@ -119,15 +118,6 @@ export const CardCreatorContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (isDeckShowMode && deckName && recallCards.length > 0) {
-      console.log(
-        "RECALL ----- ",
-        recallCards.map((each) => ({
-          header: each?.header ? each.header : "none",
-          recall: each.recall,
-        })),
-        cardId
-      );
-
       const card = recallCards[cardId];
       if (card) {
         setCardRecallState(card.recall);

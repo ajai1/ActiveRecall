@@ -30,7 +30,6 @@ export const ShowSelectedDeck = () => {
   const param = useParams();
 
   useEffect(() => {
-    console.log("SHOW DECK !!!! ", param.deck_id);
     const url = ENDPOINTS.DECKS.GET_DECK_BY_NAME.endpoint(
       "ajai",
       param.deck_id
@@ -41,11 +40,10 @@ export const ShowSelectedDeck = () => {
     })
       .then((res) => res.json())
       .then((json) => {
-        console.log("LOADED CARDS ", json.cards);
         setCardsFromSelectedDeck(json.cards);
         setDeckname(param.deck_id);
         setEditMode(false);
-        generateRecallCards();
+        //generateRecallCards();
         setCurrentCardId(0);
       });
   }, [param.deck_id, param.card_id]);

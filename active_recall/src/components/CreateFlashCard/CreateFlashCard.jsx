@@ -13,7 +13,6 @@ export const CreateFlashCard = () => {
   }, []);
 
   useEffect(() => {
-    console.log("param", param.deck_id, param.card_id, deckname);
     setDeckname(param.deck_id);
   }, [param.deck_id]);
 

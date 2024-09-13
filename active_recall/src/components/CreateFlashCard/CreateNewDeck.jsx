@@ -26,7 +26,6 @@ export const CreateNewDeck = () => {
     }).then((response) => {
       setDeckname(deckNameValue);
       setEditMode(true);
-      console.log("Setting Deck Name");
       navigate(`/create/${deckNameValue}`);
     });
   };

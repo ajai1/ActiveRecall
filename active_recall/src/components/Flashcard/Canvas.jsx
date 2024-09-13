@@ -42,7 +42,6 @@ export const Canvas = ({}) => {
 
   //Clear Canvas
   useEffect(() => {
-    console.log("Clearing Canvas");
     if (clearCanvas) {
       const canvas = canvasRef.current;
       const ctx = canvas.getContext("2d");
