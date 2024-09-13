@@ -1,6 +1,7 @@
 // src/hooks/useSaveToLocalStorage.js
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { getLocalStorage, setLocalStorage } from "../utils/localStorageService";
 
 export const useSaveToLocalStorage = ({
   cardId,
@@ -23,7 +24,7 @@ export const useSaveToLocalStorage = ({
 
   const getImageData = (images) => {
     if (images) {
-      let imageData = JSON.parse(localStorage.getItem("ImageData")) || {};
+      let imageData = getLocalStorage("ImageData") || {};
       for (let i = 0; i < images.length; i++) {
         const imageId = `image-${Date.now()}`;
         imageData[imageId] = images[i].src;
@@ -66,7 +67,7 @@ export const useSaveToLocalStorage = ({
       const cardFront = getCardFrontData();
       const cardBack = getCardBackData();
       const imageData = cardBack.imageData;
-      const deckOfCards = JSON.parse(localStorage.getItem("deckOfCards")) || {};
+      const deckOfCards = getLocalStorage("deckOfCards") || {};
 
       const cards = deckOfCards[deckName] ? deckOfCards[deckName] : [];
 
@@ -77,8 +78,8 @@ export const useSaveToLocalStorage = ({
       };
       cards.push(dataSet);
       deckOfCards[deckName] = cards;
-      localStorage.setItem("deckOfCards", JSON.stringify(deckOfCards));
-      localStorage.setItem("ImageData", JSON.stringify(imageData));
+      setLocalStorage("deckOfCards", deckOfCards);
+      setLocalStorage("ImageData", deckOfCards);
     }
   };
 

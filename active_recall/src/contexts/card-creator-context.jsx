@@ -1,6 +1,7 @@
 import { createContext, useState, useRef, useEffect } from "react";
 import { useSaveToLocalStorage } from "../hooks/saveToStorage";
 import { filterOutRecallCards, shuffleAndDuplicate } from "../utils/Utilities";
+import { getLocalStorage } from "../utils/localStorageService";
 
 export const CardCreatorContext = createContext({});
 
@@ -63,7 +64,7 @@ export const CardCreatorContextProvider = ({ children }) => {
           div.innerHTML = textContent;
           const images = div.getElementsByTagName("img");
           if (images) {
-            let imageData = localStorage.getItem("ImageData");
+            let imageData = getLocalStorage("ImageData");
             if (imageData && imageData.length > 0) {
               imageData = JSON.parse(imageData);
               for (let i = 0; i < images.length; i++) {
@@ -78,7 +79,7 @@ export const CardCreatorContextProvider = ({ children }) => {
   };
 
   const resetRecallStates = () => {
-    const deckOfCards = JSON.parse(localStorage.getItem("deckOfCards")) || {};
+    const deckOfCards = getLocalStorage("deckOfCards") || {};
     const allCardsFromDeck = deckOfCards[deckName];
     for (let i = 0; i < allCardsFromDeck.length; i++) {
       allCardsFromDeck[i].recall = 1;
@@ -89,15 +90,15 @@ export const CardCreatorContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const deckOfCards = JSON.parse(localStorage.getItem("deckOfCards")) || {};
+    const deckOfCards = getLocalStorage("deckOfCards") || {};
     if (deckOfCards[deckName] && !isDeckShowMode) {
       setCardId(deckOfCards[deckName].length);
     }
-  }, [deckName]);
+  }, [deckName, isDeckShowMode]);
 
   useEffect(() => {
     if (isDeckShowMode && deckName) {
-      const deckOfCards = JSON.parse(localStorage.getItem("deckOfCards")) || {};
+      const deckOfCards = getLocalStorage("deckOfCards") || {};
       const allCardsFromDeck = deckOfCards[deckName];
       const { knowVeryWell, littleConfusing, dontKnow } =
         filterOutRecallCards(allCardsFromDeck);
@@ -137,7 +138,7 @@ export const CardCreatorContextProvider = ({ children }) => {
         setEditorContents(back);
       }
     }
-  }, [cardId, recallCards]);
+  }, [cardId, recallCards, isDeckShowMode]);
 
   useEffect(() => {
     if (!isDeckShowMode) {

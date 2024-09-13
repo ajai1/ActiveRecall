@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 
 import "../../styles/flashcard/flashcard.css";
 import { CardCreatorContext } from "../../contexts/card-creator-context";
+import { getLocalStorage } from "../../utils/localStorageService";
 
 export const Canvas = ({}) => {
   const {
@@ -56,7 +57,7 @@ export const Canvas = ({}) => {
       const ctx = canvas.getContext("2d");
       canvas.width = canvas.clientWidth;
       canvas.height = canvas.clientHeight;
-      const deckOfCards = JSON.parse(localStorage.getItem("deckOfCards")) || {};
+      const deckOfCards = getLocalStorage("deckOfCards") || {};
       const getCard = deckOfCards[deckName];
       if (getCard && getCard[cardId]) {
         const savedCanvasData = getCard[cardId].back.canvas;

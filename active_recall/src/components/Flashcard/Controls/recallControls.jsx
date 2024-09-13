@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import "../../../styles/flashcard/controls/recallcontrols.css";
 import { CardCreatorContext } from "../../../contexts/card-creator-context";
 import { recallChanges, shuffle } from "../../../utils/Utilities";
+import { getLocalStorage } from "../../../utils/localStorageService";
 
 export const RecallControls = () => {
   const {
@@ -53,7 +54,7 @@ export const RecallControls = () => {
     setLittleConfusing(lKCards);
     setDontKnow(dKCards);
     setKnowVeryWell(kCards);
-    const deckOfCards = JSON.parse(localStorage.getItem("deckOfCards")) || {};
+    const deckOfCards = getLocalStorage("deckOfCards") || {};
     deckOfCards[deckName] = [...dKCards, ...lKCards, ...kCards];
     localStorage.setItem("deckOfCards", JSON.stringify(deckOfCards));
 

@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { CardCreatorContext } from "../../contexts/card-creator-context";
 import { useNavigate } from "react-router-dom";
+import { getLocalStorage } from "../../utils/localStorageService";
 
 export const ShowDeckOfCards = () => {
   const navigate = useNavigate();
@@ -10,7 +11,7 @@ export const ShowDeckOfCards = () => {
     useContext(CardCreatorContext);
 
   useEffect(() => {
-    const getAllDeck = JSON.parse(localStorage.getItem("deckOfCards")) || {};
+    const getAllDeck = getLocalStorage("deckOfCards") || {};
     setAllDeckNames(Object.keys(getAllDeck));
     setIsDeckShowMode(false);
   }, []);
