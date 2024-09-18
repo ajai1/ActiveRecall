@@ -6,17 +6,18 @@ import "../../../styles/flashcard/editor.css";
 import { CardContext } from "../../../contexts/card-context";
 
 export const Editor = () => {
-  const { editMode, cardId, canvasMode, textContent, setTextContent } =
-    useContext(CardContext);
-
-  const quillRef = useRef(null); // Ref for accessing the Quill editor instance
+  const {
+    editMode,
+    quillRef,
+    canvasMode,
+    textContent,
+    setTextContent,
+    setDefaultHeaderInEditor,
+  } = useContext(CardContext);
 
   useEffect(() => {
-    if (quillRef.current) {
-      const quill = quillRef.current.getEditor();
-      quill.format("header", 1); // Set the initial format to 'h1'
-    }
-  }, [cardId]);
+    setDefaultHeaderInEditor();
+  }, []);
 
   return (
     <div className="text-editor" style={{ zIndex: canvasMode ? 0 : 1 }}>

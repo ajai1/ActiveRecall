@@ -33,6 +33,7 @@ export const CardContextProvider = ({ children }) => {
   const [reviewCards, setReviewCards] = useState(false);
   const [timerDone, setTimerDone] = useState(false);
 
+  const quillRef = useRef("");
   const textContent = useRef("");
   const canvasRef = useRef("");
 
@@ -48,6 +49,11 @@ export const CardContextProvider = ({ children }) => {
     setHeader("");
     setBriefStatement("");
     setTextContent("");
+    if (flipCard) {
+      setTimeout(() => {
+        setDefaultHeaderInEditor();
+      }, 250);
+    }
     setFlipCard(false);
     setCardRecallState(1);
   };
@@ -97,6 +103,13 @@ export const CardContextProvider = ({ children }) => {
     setCardRecallState(currentCard.recall);
   };
 
+  const setDefaultHeaderInEditor = () => {
+    if (quillRef.current) {
+      const quill = quillRef.current.getEditor();
+      quill.format("header", 1); // Set the initial format to 'h1'
+    }
+  };
+
   // ---------------------------------------------------------------------------
 
   const contextStates = {
@@ -118,6 +131,7 @@ export const CardContextProvider = ({ children }) => {
   };
 
   const contextRefs = {
+    quillRef,
     textContent,
     canvasRef,
   };
@@ -141,6 +155,7 @@ export const CardContextProvider = ({ children }) => {
     setTimerDone,
     setReviewCards,
     setCurrentCard,
+    setDefaultHeaderInEditor,
   };
 
   const ctxValue = {
