@@ -41,7 +41,10 @@ export const getCardData = (cardInputs) => {
     header: cardInputs.header,
     briefstatement: cardInputs.briefstatement,
     text: textData,
-    recall: 1,
+    interval: 5,
+    easeFactor: 2.5,
+    repetition: 0,
+    recall: 0,
   };
   return cardData;
 };

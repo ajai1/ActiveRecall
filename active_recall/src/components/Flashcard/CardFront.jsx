@@ -11,7 +11,8 @@ export const CardFront = () => {
     setHeader,
   } = useContext(CardCreatorContext); */
 
-  const { editMode, header, briefstatement } = useContext(CardContext);
+  const { editMode, header, briefstatement, currentCard } =
+    useContext(CardContext);
   const { setHeader, setBriefStatement } = useContext(CardContext);
 
   return (

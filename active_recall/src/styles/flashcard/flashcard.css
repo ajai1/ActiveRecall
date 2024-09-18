@@ -153,3 +153,18 @@
   justify-content: space-evenly;
   align-items: center;
 }
+
+.try_again {
+  font-weight: 600;
+  padding: 10px;
+  margin-right: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: none;
+  box-shadow: 1px 2px 5px black;
+}
+
+.try_again:hover {
+  background-color: darkgray;
+  color: white;
+}

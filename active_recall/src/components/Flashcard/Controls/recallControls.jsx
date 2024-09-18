@@ -6,20 +6,15 @@ import { CardContext } from "../../../contexts/card-context";
 
 export const RecallControls = () => {
   const {
-    currentCardId,
-    recallCards,
-    setRecallCards,
     deckname,
-    setCurrentCardId,
-    knowVeryWell,
-    littleConfusing,
-    dontKnow,
-    setDontKnow,
-    setLittleConfusing,
-    setKnowVeryWell,
+    cardsFromSelectedDeck,
+    setCardsFromSelectedDeck,
+    currentCard,
+    reviewCards,
   } = useContext(CardContext);
 
   const recallAPICall = (cardRecallToModify) => {
+    console.log("RECALL OPTION SELECTED ", cardRecallToModify);
     const url = ENDPOINTS.CARDS.UPDATE_CARD.endpoint("ajai", deckname);
     fetch(url, {
       method: ENDPOINTS.CARDS.UPDATE_CARD.method,
@@ -27,115 +22,71 @@ export const RecallControls = () => {
       body: JSON.stringify(cardRecallToModify),
     })
       .then((res) => res.json())
-      .then((json) => {});
+      .then((json) => {
+        //console.log("Updated the card ", json);
+      });
   };
 
-  /*   const recallCalculator = (handleType, modifyRecallCards) => {
-    let dKCards = [...dontKnow];
-    let lKCards = [...littleConfusing];
-    let kCards = [...knowVeryWell];
-    let changeFactor = recallChanges(
-      modifyRecallCards[currentCardId].recall,
-      handleType
-    );
+  // Update card function (as defined before)
+  const updateCard = (card, feedback) => {
+    // Your spaced repetition algorithm here
+    switch (feedback) {
+      case "know well":
+        card.easeFactor = Math.min(card.easeFactor + 0.1, 3.0);
+        card.repetition += 1;
+        card.interval = Math.min(
+          Math.ceil(card.interval * card.easeFactor),
+          60
+        );
+        break;
+      case "little confusing":
+        card.easeFactor = Math.max(card.easeFactor - 0.1, 1.3);
+        card.repetition = 0;
+        card.interval = Math.min(Math.ceil(card.interval * 0.5), 60);
+        break;
+      case "don't know":
+        card.easeFactor = Math.max(card.easeFactor - 0.2, 1.3);
+        card.repetition = 0;
+        card.interval = 5; // Reset to a small value
+        break;
+    }
+    const updateCards = [...cardsFromSelectedDeck];
+    const indexToUpdate = updateCards.findIndex((ecard) => ecard.id == card.id);
+    updateCards[indexToUpdate] = { ...card };
+    recallAPICall(card);
+    setCardsFromSelectedDeck(updateCards);
+    return card;
   };
- */
-  const recallHandler = (handleType) => {
-    let modifyRecallCards = [...recallCards];
-    let dKCards = dontKnow.length == 0 ? [] : [...dontKnow];
-    let lKCards = littleConfusing.length == 0 ? [] : [...littleConfusing];
-    let kCards = knowVeryWell.length == 0 ? [] : [...knowVeryWell];
-    let changeFactor = recallChanges(
-      modifyRecallCards[currentCardId].recall,
-      handleType
-    );
-    // remove from the deck, later we will align to the correct recall deck
-    if (modifyRecallCards[currentCardId].recall == 3) {
-      dKCards = dKCards.filter(
-        (card) => card.uid != modifyRecallCards[currentCardId].uid
-      );
-    } else if (modifyRecallCards[currentCardId].recall == 2) {
-      lKCards = lKCards.filter(
-        (card) => card.uid != modifyRecallCards[currentCardId].uid
-      );
-    } else if (modifyRecallCards[currentCardId].recall == 1) {
-      kCards = kCards.filter(
-        (card) => card.uid != modifyRecallCards[currentCardId].uid
-      );
-    }
-    if (modifyRecallCards[currentCardId].recall != handleType) {
-      modifyRecallCards[currentCardId].recall = handleType;
-      recallAPICall(modifyRecallCards[currentCardId]);
-    }
 
-    if (handleType == 3) {
-      dKCards.push(modifyRecallCards[currentCardId]);
-    } else if (handleType == 2) {
-      lKCards.push(modifyRecallCards[currentCardId]);
-    } else if (handleType == 1) {
-      kCards.push(modifyRecallCards[currentCardId]);
-    }
-    setLittleConfusing(lKCards);
-    setDontKnow(dKCards);
-    setKnowVeryWell(kCards);
-
-    let firstHalf = modifyRecallCards.slice(0, currentCardId + 1);
-    let secondHalf = modifyRecallCards.slice(
-      currentCardId + 1,
-      modifyRecallCards.length
-    );
-    if (changeFactor < 0) {
-      //remove
-      while (changeFactor < 0) {
-        const index = secondHalf.findIndex(
-          (card) => card.uid == modifyRecallCards[currentCardId].uid
-        );
-        if (index != -1) {
-          secondHalf.splice(index, 1);
-          changeFactor++;
-        } else {
-          break;
-        }
-      }
-    } else {
-      for (let i = 0; i < changeFactor; i++) {
-        let randomPlaceOfInsertion =
-          Math.floor(Math.random() * (secondHalf.length - 0)) + 0;
-        secondHalf.splice(
-          randomPlaceOfInsertion,
-          0,
-          modifyRecallCards[currentCardId]
-        );
-      }
-    }
-    secondHalf = shuffle(secondHalf);
-    modifyRecallCards = [...firstHalf, ...secondHalf];
-    setRecallCards(modifyRecallCards);
-    if (currentCardId < modifyRecallCards.length - 1) {
-      setCurrentCardId((prev) => prev + 1);
-    }
+  // Handle user feedback
+  const handleUserFeedback = (feedback) => {
+    // Update the current card based on the feedback
+    updateCard(currentCard, feedback);
   };
 
   return (
-    <div className="recall_container">
-      <div
-        onClick={() => recallHandler(1)}
+    <div
+      className="recall_container"
+      style={{ display: reviewCards ? "none" : "flex" }}
+    >
+      <button
+        onClick={() => handleUserFeedback("know well")}
         className="know_very_well recall_controls"
       >
         Know very well
-      </div>
-      <div
-        onClick={() => recallHandler(2)}
+      </button>
+      <button
+        onClick={() => handleUserFeedback("little confusing")}
         className="little_confusing recall_controls"
       >
         Little Confusing
-      </div>
-      <div
-        onClick={() => recallHandler(3)}
+      </button>
+      <button
+        onClick={() => handleUserFeedback("don't know")}
         className="dont_know recall_controls"
       >
         Don't Understand
-      </div>
+      </button>
     </div>
   );
 };

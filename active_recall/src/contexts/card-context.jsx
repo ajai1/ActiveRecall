@@ -1,7 +1,8 @@
-import { createContext, useState, useRef, useEffect } from "react";
+import { createContext, useState, useRef, useEffect, useCallback } from "react";
 import { useSaveToLocalStorage } from "../hooks/saveToStorage";
-import { filterOutRecallCards, shuffleAndDuplicate } from "../utils/Utilities";
+import { shuffle } from "../utils/Utilities";
 import { getLocalStorage } from "../utils/localStorageService";
+import { ENDPOINTS, HEADERS } from "../constants/apiConstants";
 
 export const CardContext = createContext({
   deckname: null,
@@ -27,10 +28,9 @@ export const CardContextProvider = ({ children }) => {
   const [eraserSelected, setEraserSelected] = useState(false);
   const [color, setColor] = useState("#000000");
   const [cardsFromSelectedDeck, setCardsFromSelectedDeck] = useState([]);
-  const [knowVeryWell, setKnowVeryWell] = useState([]);
-  const [littleConfusing, setLittleConfusing] = useState([]);
-  const [dontKnow, setDontKnow] = useState([]);
-  const [recallCards, setRecallCards] = useState([]);
+  const [currentCard, setCurrentCard] = useState();
+  const [reviewCards, setReviewCards] = useState(false);
+  const [timerDone, setTimerDone] = useState(false);
 
   const textContent = useRef("");
   const canvasRef = useRef("");
@@ -48,22 +48,42 @@ export const CardContextProvider = ({ children }) => {
     setCardRecallState(1);
   };
 
-  const generateRecallCards = () => {
-    if (!editMode && cardsFromSelectedDeck.length > 0) {
-      console.log("GENERATE !!!");
-      const { knowVeryWell, littleConfusing, dontKnow } = filterOutRecallCards(
-        cardsFromSelectedDeck
-      );
-      setKnowVeryWell(knowVeryWell);
-      setLittleConfusing(littleConfusing);
-      setDontKnow(dontKnow);
-      const recallCards = shuffleAndDuplicate(
-        knowVeryWell,
-        littleConfusing,
-        dontKnow
-      );
-      setRecallCards(recallCards);
+  const showNextCard = () => {
+    const minInterval = Math.min(
+      ...cardsFromSelectedDeck.map((card) => card.interval)
+    );
+    const nextMinInterval = Math.min(
+      ...cardsFromSelectedDeck
+        .filter((card) => card.interval != minInterval)
+        .map((card) => card.interval)
+    );
+    const cardsWithMinInterval = cardsFromSelectedDeck
+      .filter(
+        (card) =>
+          card.interval == minInterval || card.interval == nextMinInterval
+      )
+      .filter((card) => card.repetition < 6);
+    if (cardsWithMinInterval.length == 0) {
+      resetCardsIntervalAndRepetitions();
+      setReviewCards(true);
+    } else {
+      const shuffleCards = shuffle(cardsWithMinInterval);
+      console.log("Shuffled Cards ", shuffleCards);
+      const nextCard = shuffleCards[0];
+      setCurrentCard(nextCard);
     }
+  };
+
+  const resetCardsIntervalAndRepetitions = () => {
+    if (deckname.length == 0) return;
+    const url = ENDPOINTS.DECKS.RESET_CARDS_INTERVAL_REPETITION.endpoint();
+    fetch(url, {
+      method: ENDPOINTS.DECKS.RESET_CARDS_INTERVAL_REPETITION.method,
+      headers: HEADERS,
+      body: JSON.stringify({ username: "ajai", deckname: deckname }),
+    }).then((response) => {
+      console.log("REFETCH DATA ", response);
+    });
   };
 
   // ---------------------------------------------------------------------------
@@ -81,10 +101,9 @@ export const CardContextProvider = ({ children }) => {
     eraserSelected,
     color,
     cardsFromSelectedDeck,
-    knowVeryWell,
-    littleConfusing,
-    dontKnow,
-    recallCards,
+    currentCard,
+    reviewCards,
+    timerDone,
   };
 
   const contextRefs = {
@@ -107,11 +126,10 @@ export const CardContextProvider = ({ children }) => {
     setEraserSelected,
     setColor,
     setCardsFromSelectedDeck,
-    setRecallCards,
-    generateRecallCards,
-    setKnowVeryWell,
-    setLittleConfusing,
-    setDontKnow,
+    showNextCard,
+    setTimerDone,
+    setReviewCards,
+    setCurrentCard,
   };
 
   const ctxValue = {
@@ -124,18 +142,27 @@ export const CardContextProvider = ({ children }) => {
 
   //Take the current Card from the deck set the states to show card
   useEffect(() => {
-    if (!editMode && recallCards.length > 0 && recallCards[currentCardId]) {
-      const currentCard = recallCards[currentCardId];
+    if (!editMode && currentCard) {
       setHeader(currentCard.header);
       setBriefStatement(currentCard.briefstatement);
       setTextContent(currentCard.text);
       setCardRecallState(currentCard.recall);
     }
-  }, [recallCards, currentCardId]);
+  }, [currentCard]);
 
   useEffect(() => {
-    generateRecallCards();
+    if (cardsFromSelectedDeck && cardsFromSelectedDeck.length > 0) {
+      showNextCard();
+    }
   }, [cardsFromSelectedDeck]);
+
+  useEffect(() => {
+    if (reviewCards) {
+      setTimeout(() => {
+        setTimerDone(true);
+      }, 5000);
+    }
+  }, [reviewCards]);
 
   return (
     <CardContext.Provider value={ctxValue}>{children}</CardContext.Provider>

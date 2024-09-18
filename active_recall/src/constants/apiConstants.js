@@ -26,6 +26,10 @@ export const ENDPOINTS = {
       endpoint: (username, deckname) =>
         `${CONFIG.LOCAL_BASE}/decks/${username}/${deckname}`,
     },
+    RESET_CARDS_INTERVAL_REPETITION: {
+      method: REQUEST_METHODS.POST,
+      endpoint: () => `${CONFIG.LOCAL_BASE}/schedule`,
+    },
   },
   CARDS: {
     CREATE_CARD: {

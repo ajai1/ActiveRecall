@@ -12,6 +12,7 @@
   margin-right: 5px;
   cursor: pointer;
   border-radius: 5px;
+  border: none;
 }
 
 .recall_controls:hover {
