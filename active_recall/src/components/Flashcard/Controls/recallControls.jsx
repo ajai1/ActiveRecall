@@ -3,6 +3,7 @@ import "../../../styles/flashcard/controls/recallcontrols.css";
 import { recallChanges, shuffle } from "../../../utils/Utilities";
 import { ENDPOINTS, HEADERS } from "../../../constants/apiConstants";
 import { CardContext } from "../../../contexts/card-context";
+import { useAuthFetch } from "../../../hooks/authorization";
 
 export const RecallControls = () => {
   const {
@@ -13,10 +14,12 @@ export const RecallControls = () => {
     reviewCards,
   } = useContext(CardContext);
 
+  const authFetch = useAuthFetch();
+
   const recallAPICall = (cardRecallToModify) => {
     console.log("RECALL OPTION SELECTED ", cardRecallToModify);
-    const url = ENDPOINTS.CARDS.UPDATE_CARD.endpoint("ajai", deckname);
-    fetch(url, {
+    const url = ENDPOINTS.CARDS.UPDATE_CARD.endpoint(deckname);
+    authFetch(url, {
       method: ENDPOINTS.CARDS.UPDATE_CARD.method,
       headers: HEADERS,
       body: JSON.stringify(cardRecallToModify),

@@ -7,8 +7,10 @@ import AddCardIcon from "../../../static/icons/addcard.png";
 import { ENDPOINTS, HEADERS } from "../../../constants/apiConstants";
 import { getCardData } from "../../../utils/CardUtils";
 import { CardContext } from "../../../contexts/card-context";
+import { useAuthFetch } from "../../../hooks/authorization";
 
 export const CardControls = () => {
+  const authFetch = useAuthFetch();
   const {
     editMode,
     deckname,
@@ -23,8 +25,8 @@ export const CardControls = () => {
 
   //API call
   const addCardToTheDeck = () => {
-    const url = ENDPOINTS.CARDS.CREATE_CARD.endpoint("ajai", deckname);
-    fetch(url, {
+    const url = ENDPOINTS.CARDS.CREATE_CARD.endpoint(deckname);
+    authFetch(url, {
       method: ENDPOINTS.CARDS.CREATE_CARD.method,
       headers: HEADERS,
       body: JSON.stringify(

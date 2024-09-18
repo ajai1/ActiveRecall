@@ -7,6 +7,9 @@ import { CreateNewDeck } from "./components/CreateFlashCard/CreateNewDeck";
 import { CreateFlashCard } from "./components/CreateFlashCard/CreateFlashCard";
 import { ShowDeckOfCards } from "./components/ShowDeckOfCards/ShowDeckOfCards";
 import { ShowSelectedDeck } from "./components/ShowDeckOfCards/ShowSelectedDeck";
+import { SignUp } from "./components/Login/SignUp";
+import { SignIn } from "./components/Login/SignIn";
+import { UserProvider } from "./contexts/user-context";
 
 const router = createBrowserRouter([
   {
@@ -14,6 +17,8 @@ const router = createBrowserRouter([
     element: <RootComponent />,
     children: [
       { path: "/", element: <Dashboard /> },
+      { path: "/signup", element: <SignUp /> },
+      { path: "/signin", element: <SignIn /> },
       { path: "/create", element: <CreateNewDeck /> },
       {
         path: "/create/:deck_id",
@@ -33,9 +38,11 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <div className="App">
-      <RouterProvider router={router}></RouterProvider>
-    </div>
+    <UserProvider>
+      <div className="App">
+        <RouterProvider router={router}></RouterProvider>
+      </div>
+    </UserProvider>
   );
 }
 

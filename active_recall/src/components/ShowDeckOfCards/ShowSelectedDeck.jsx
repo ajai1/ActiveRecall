@@ -12,6 +12,7 @@ import NextDisabled from "../../static/icons/next_disabled.png";
 import { RecallControls } from "../Flashcard/Controls/recallControls";
 import { CardContext } from "../../contexts/card-context";
 import { ENDPOINTS, HEADERS } from "../../constants/apiConstants";
+import { useAuthFetch } from "../../hooks/authorization";
 
 export const ShowSelectedDeck = () => {
   const {
@@ -32,17 +33,14 @@ export const ShowSelectedDeck = () => {
   } = useContext(CardContext);
 
   const param = useParams();
+  const authFetch = useAuthFetch();
 
   const [isPrevDisabled, setIsPrevDisabled] = useState(false);
   const [isNextDisabled, setIsNextDisabled] = useState(false);
 
   useEffect(() => {
-    checkCurrentCardIndexAndDisableControls();
+    if (currentCard) checkCurrentCardIndexAndDisableControls();
   }, [currentCard]);
-
-  useEffect(() => {
-    if (timerDone == false) fetchCardsFromDeck(param.deck_id);
-  }, [param.deck_id, timerDone, reviewCards]);
 
   const checkCurrentCardIndexAndDisableControls = () => {
     const currentCardId = findIndexOfTheCurrentCard();
@@ -55,19 +53,29 @@ export const ShowSelectedDeck = () => {
     }
   };
 
+  useEffect(() => {
+    if (timerDone == false) {
+      fetchCardsFromDeck(param.deck_id);
+    }
+  }, [param.deck_id, timerDone, reviewCards]);
+
   const fetchCardsFromDeck = useCallback(
     (deck_id) => {
-      const url = ENDPOINTS.DECKS.GET_DECK_BY_NAME.endpoint("ajai", deck_id);
-      fetch(url, {
+      const url = ENDPOINTS.DECKS.GET_DECK_BY_NAME.endpoint(deck_id);
+      authFetch(url, {
         method: ENDPOINTS.DECKS.GET_DECK_BY_NAME.method,
         headers: HEADERS,
       })
         .then((res) => res.json())
         .then((json) => {
-          setCardsFromSelectedDeck(json.cards);
+          console.log("Setting JSON CARDS ", json);
+          setCardsFromSelectedDeck(json.deckEntity.cards);
           setDeckname(param.deck_id);
           setEditMode(false);
           setCurrentCardId(0);
+          if (json.paused) {
+            setReviewCards(true);
+          }
         });
     },
     [param.deck_id]

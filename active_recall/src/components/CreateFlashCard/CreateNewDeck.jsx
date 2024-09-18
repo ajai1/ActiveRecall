@@ -1,11 +1,14 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { ENDPOINTS } from "../../constants/apiConstants";
+import { ENDPOINTS, HEADERS } from "../../constants/apiConstants";
 import { CardContext } from "../../contexts/card-context";
+import { useAuthFetch } from "../../hooks/authorization";
 
 export const CreateNewDeck = () => {
   const { setDeckname, setEditMode } = useContext(CardContext);
   const navigate = useNavigate();
+
+  const authFetch = useAuthFetch();
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -14,12 +17,10 @@ export const CreateNewDeck = () => {
       alert("Enter a name");
       return;
     }
-    const url = ENDPOINTS.DECKS.CREATE_DECK.endpoint("ajai");
-    fetch(url, {
+    const url = ENDPOINTS.DECKS.CREATE_DECK.endpoint();
+    authFetch(url, {
       method: ENDPOINTS.DECKS.CREATE_DECK.method,
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: HEADERS,
       body: JSON.stringify({
         deckname: deckNameValue,
       }),

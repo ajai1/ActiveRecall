@@ -3,6 +3,7 @@ import { useSaveToLocalStorage } from "../hooks/saveToStorage";
 import { shuffle } from "../utils/Utilities";
 import { getLocalStorage } from "../utils/localStorageService";
 import { ENDPOINTS, HEADERS } from "../constants/apiConstants";
+import { useAuthFetch } from "../hooks/authorization";
 
 export const CardContext = createContext({
   deckname: null,
@@ -34,6 +35,8 @@ export const CardContextProvider = ({ children }) => {
 
   const textContent = useRef("");
   const canvasRef = useRef("");
+
+  const authFetch = useAuthFetch();
 
   // ---------------------------------------------------------------------------
 
@@ -77,10 +80,10 @@ export const CardContextProvider = ({ children }) => {
   const resetCardsIntervalAndRepetitions = () => {
     if (deckname.length == 0) return;
     const url = ENDPOINTS.DECKS.RESET_CARDS_INTERVAL_REPETITION.endpoint();
-    fetch(url, {
+    authFetch(url, {
       method: ENDPOINTS.DECKS.RESET_CARDS_INTERVAL_REPETITION.method,
       headers: HEADERS,
-      body: JSON.stringify({ username: "ajai", deckname: deckname }),
+      body: JSON.stringify({ deckname: deckname }),
     }).then((response) => {
       console.log("REFETCH DATA ", response);
     });

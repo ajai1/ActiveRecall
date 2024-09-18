@@ -2,27 +2,66 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 
 import "../styles/Navbar.css";
-import { CardCreatorContext } from "../contexts/card-creator-context";
 import { CardContext } from "../contexts/card-context";
+import { UserContext } from "../contexts/user-context";
 
 export const Navbar = () => {
   const { setEditMode, setCanvasMode } = useContext(CardContext);
+  const { userCreds, setUserCreds } = useContext(UserContext);
   return (
     <div>
       <nav className="navbar">
-        <Link
-          className="nav_items"
-          to={"/"}
-          onClick={() => {
-            setEditMode(false);
-            setCanvasMode(false);
-          }}
-        >
-          Home
-        </Link>
-        <Link className="nav_items" to={"/deck-of-cards"}>
-          Deck Of Cards
-        </Link>
+        <div className="nav_items_container">
+          <Link
+            className="nav_items"
+            to={"/"}
+            onClick={() => {
+              setEditMode(false);
+              setCanvasMode(false);
+            }}
+          >
+            Home
+          </Link>
+          <Link className="nav_items" to={"/deck-of-cards"}>
+            Deck Of Cards
+          </Link>
+        </div>
+        <div className="nav_items_container">
+          <Link
+            className="nav_items"
+            to={"/signup"}
+            onClick={() => {
+              setEditMode(false);
+              setCanvasMode(false);
+            }}
+          >
+            Sign up
+          </Link>
+          {userCreds ? (
+            <Link
+              className="nav_items"
+              to={"/signin"}
+              onClick={() => {
+                setEditMode(false);
+                setCanvasMode(false);
+                setUserCreds(null);
+              }}
+            >
+              Sign Out
+            </Link>
+          ) : (
+            <Link
+              className="nav_items"
+              to={"/signin"}
+              onClick={() => {
+                setEditMode(false);
+                setCanvasMode(false);
+              }}
+            >
+              Sign in
+            </Link>
+          )}
+        </div>
       </nav>
     </div>
   );

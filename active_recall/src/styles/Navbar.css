@@ -1,9 +1,14 @@
 .navbar {
   display: flex;
+  justify-content: space-between;
   background-color: #606676;
   align-items: center;
   height: 2em;
   color: white;
+}
+
+.nav_items_container {
+  margin-right: 1em;
 }
 
 .nav_items {

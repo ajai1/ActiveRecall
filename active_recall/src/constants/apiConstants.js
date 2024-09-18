@@ -12,19 +12,28 @@ export const HEADERS = {
 };
 
 export const ENDPOINTS = {
+  USERS: {
+    CREATE_USER: {
+      method: REQUEST_METHODS.POST,
+      endpoint: () => `${CONFIG.LOCAL_BASE}/users`,
+    },
+    SIGNIN: {
+      method: REQUEST_METHODS.POST,
+      endpoint: () => `${CONFIG.LOCAL_BASE}/users/signin`,
+    },
+  },
   DECKS: {
     GET_ALL_DECKS: {
       method: REQUEST_METHODS.GET,
-      endpoint: (username) => `${CONFIG.LOCAL_BASE}/decks/${username}`,
+      endpoint: () => `${CONFIG.LOCAL_BASE}/decks`,
     },
     CREATE_DECK: {
       method: REQUEST_METHODS.POST,
-      endpoint: (username) => `${CONFIG.LOCAL_BASE}/decks/${username}`,
+      endpoint: () => `${CONFIG.LOCAL_BASE}/decks`,
     },
     GET_DECK_BY_NAME: {
       method: REQUEST_METHODS.GET,
-      endpoint: (username, deckname) =>
-        `${CONFIG.LOCAL_BASE}/decks/${username}/${deckname}`,
+      endpoint: (deckname) => `${CONFIG.LOCAL_BASE}/decks/${deckname}`,
     },
     RESET_CARDS_INTERVAL_REPETITION: {
       method: REQUEST_METHODS.POST,
@@ -34,13 +43,11 @@ export const ENDPOINTS = {
   CARDS: {
     CREATE_CARD: {
       method: REQUEST_METHODS.POST,
-      endpoint: (username, deckname) =>
-        `${CONFIG.LOCAL_BASE}/cards/${username}/${deckname}`,
+      endpoint: (deckname) => `${CONFIG.LOCAL_BASE}/cards/${deckname}`,
     },
     UPDATE_CARD: {
       method: REQUEST_METHODS.PUT,
-      endpoint: (username, deckname) =>
-        `${CONFIG.LOCAL_BASE}/cards/${username}/${deckname}`,
+      endpoint: (deckname) => `${CONFIG.LOCAL_BASE}/cards/${deckname}`,
     },
   },
 };
