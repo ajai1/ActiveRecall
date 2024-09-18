@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ENDPOINTS, HEADERS } from "../../constants/apiConstants";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../contexts/user-context";
@@ -13,6 +13,12 @@ export const SignIn = () => {
   });
 
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (userCreds != null) {
+      navigate("/");
+    }
+  }, [userCreds]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

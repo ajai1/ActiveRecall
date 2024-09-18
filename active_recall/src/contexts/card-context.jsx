@@ -48,6 +48,7 @@ export const CardContextProvider = ({ children }) => {
     setHeader("");
     setBriefStatement("");
     setTextContent("");
+    setFlipCard(false);
     setCardRecallState(1);
   };
 
@@ -87,6 +88,13 @@ export const CardContextProvider = ({ children }) => {
     }).then((response) => {
       console.log("REFETCH DATA ", response);
     });
+  };
+
+  const setCurrentCardStates = () => {
+    setHeader(currentCard.header);
+    setBriefStatement(currentCard.briefstatement);
+    setTextContent(currentCard.text);
+    setCardRecallState(currentCard.recall);
   };
 
   // ---------------------------------------------------------------------------
@@ -146,10 +154,14 @@ export const CardContextProvider = ({ children }) => {
   //Take the current Card from the deck set the states to show card
   useEffect(() => {
     if (!editMode && currentCard) {
-      setHeader(currentCard.header);
-      setBriefStatement(currentCard.briefstatement);
-      setTextContent(currentCard.text);
-      setCardRecallState(currentCard.recall);
+      if (flipCard) {
+        setTimeout(() => {
+          setCurrentCardStates();
+        }, 250);
+        setFlipCard(false);
+      } else {
+        setCurrentCardStates();
+      }
     }
   }, [currentCard]);
 

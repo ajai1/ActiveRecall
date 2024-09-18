@@ -5,7 +5,8 @@ import { useParams } from "react-router-dom";
 import { CardContext } from "../../contexts/card-context";
 
 export const CreateFlashCard = () => {
-  const { deckname, setDeckname, setEditMode } = useContext(CardContext);
+  const { deckname, setDeckname, setEditMode, resetTheCard } =
+    useContext(CardContext);
   const param = useParams();
 
   useEffect(() => {
@@ -14,6 +15,7 @@ export const CreateFlashCard = () => {
 
   useEffect(() => {
     setDeckname(param.deck_id);
+    resetTheCard();
   }, [param.deck_id]);
 
   return (

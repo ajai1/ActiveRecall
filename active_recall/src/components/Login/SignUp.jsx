@@ -32,7 +32,6 @@ export const SignUp = () => {
       setError("");
       createUser();
       console.log("Form Data Submitted:", formData);
-      // Perform your form submission logic here
     }
   };
 
@@ -49,7 +48,7 @@ export const SignUp = () => {
       });
       const json = await response.json();
       console.log("USER CREATED !!!");
-      navigate("/");
+      navigate("/signin");
     } catch (error) {}
   };
 
