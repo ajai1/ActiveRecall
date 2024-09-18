@@ -5,19 +5,8 @@ import { getLocalStorage } from "../../utils/localStorageService";
 import { CardContext } from "../../contexts/card-context";
 
 export const Canvas = ({}) => {
-  /*  const {
-    deckName,
-    cardId,
-    canvasMode,
-    clearCanvas,
-    setClearCanvas,
-    eraserSelected,
-    color,
-    canvasRef,
-  } = useContext(CardCreatorContext);
- */
   const {
-    currentCardId,
+    currentCard,
     canvasMode,
     clearCanvas,
     setClearCanvas,
@@ -32,13 +21,12 @@ export const Canvas = ({}) => {
   const [isDrawing, setIsDrawing] = useState(false);
 
   //UseEffects ########################################################################################################
-
   //Start-Up
   useEffect(() => {
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
     return () => window.removeEventListener("resize", resizeCanvas);
-  }, [currentCardId, canvasMode]);
+  }, []);
 
   //Clear Canvas
   useEffect(() => {
@@ -66,26 +54,6 @@ export const Canvas = ({}) => {
       const ctx = canvas.getContext("2d");
       canvas.width = canvas.clientWidth;
       canvas.height = canvas.clientHeight;
-    }
-  };
-
-  const resizeCanvasUsingLocalStorage = () => {
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const ctx = canvas.getContext("2d");
-      canvas.width = canvas.clientWidth;
-      canvas.height = canvas.clientHeight;
-      const deckOfCards = getLocalStorage("deckOfCards") || {};
-      //const getCard = deckOfCards[deckName];
-      /*       if (getCard && getCard[cardId]) {
-        const savedCanvasData = getCard[cardId].back.canvas;
-        const img = new Image();
-        img.src = savedCanvasData;
-        img.onload = () => {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(img, 0, 0);
-        };
-      } */
     }
   };
 

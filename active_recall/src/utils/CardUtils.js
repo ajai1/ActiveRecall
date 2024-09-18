@@ -36,11 +36,12 @@ const getCanvasData = (canvasRef) => {
 };
 
 export const getCardData = (cardInputs) => {
-  const { imageData, textData } = getCardBackData(cardInputs);
+  const { imageData, textData, canvasData } = getCardBackData(cardInputs);
   const cardData = {
     header: cardInputs.header,
     briefstatement: cardInputs.briefstatement,
     text: textData,
+    canvas: canvasData,
     interval: 5,
     easeFactor: 2.5,
     repetition: 0,

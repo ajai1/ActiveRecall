@@ -56,6 +56,7 @@ export const CardContextProvider = ({ children }) => {
     }
     setFlipCard(false);
     setCardRecallState(1);
+    setClearCanvas(true);
   };
 
   const showNextCard = () => {
@@ -101,12 +102,30 @@ export const CardContextProvider = ({ children }) => {
     setBriefStatement(currentCard.briefstatement);
     setTextContent(currentCard.text);
     setCardRecallState(currentCard.recall);
+    canvasImageLoad(currentCard.canvas);
   };
 
   const setDefaultHeaderInEditor = () => {
     if (quillRef.current) {
       const quill = quillRef.current.getEditor();
       quill.format("header", 1); // Set the initial format to 'h1'
+    }
+  };
+
+  const canvasImageLoad = () => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext("2d");
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
+      if (currentCard && currentCard.canvas) {
+        const img = new Image();
+        img.src = currentCard.canvas;
+        img.onload = () => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0);
+        };
+      }
     }
   };
 
