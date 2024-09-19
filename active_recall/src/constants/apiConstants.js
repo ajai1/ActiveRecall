@@ -21,6 +21,10 @@ export const ENDPOINTS = {
       method: REQUEST_METHODS.POST,
       endpoint: () => `${CONFIG.LOCAL_BASE}/users/signin`,
     },
+    SIGNOUT: {
+      method: REQUEST_METHODS.POST,
+      endpoint: () => `${CONFIG.LOCAL_BASE}/logout`,
+    },
   },
   DECKS: {
     GET_ALL_DECKS: {

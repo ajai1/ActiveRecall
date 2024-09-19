@@ -9,7 +9,7 @@ export const useAuthFetch = () => {
     const headers = {
       ...options.headers,
       "Content-Type": "application/json",
-      username: userCreds,
+      ...(userCreds ? { Authorization: `Basic ${userCreds}` } : {}),
     };
 
     return fetch(url, {

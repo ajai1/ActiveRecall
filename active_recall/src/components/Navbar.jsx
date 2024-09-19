@@ -1,13 +1,34 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import "../styles/Navbar.css";
 import { CardContext } from "../contexts/card-context";
 import { UserContext } from "../contexts/user-context";
+import { useAuthFetch } from "../hooks/authorization";
+import { ENDPOINTS, HEADERS } from "../constants/apiConstants";
 
 export const Navbar = () => {
   const { setEditMode, setCanvasMode } = useContext(CardContext);
   const { userCreds, setUserCreds } = useContext(UserContext);
+
+  const navigate = useNavigate();
+
+  const authFetch = useAuthFetch();
+
+  const signOut = () => {
+    const url = ENDPOINTS.USERS.SIGNOUT.endpoint();
+    authFetch(url, {
+      method: ENDPOINTS.USERS.SIGNOUT.method,
+      headers: HEADERS,
+    }).then((response) => {
+      console.log("LOGGED OUT");
+      setEditMode(false);
+      setCanvasMode(false);
+      setUserCreds(null);
+      navigate("/signin");
+    });
+  };
+
   return (
     <div>
       <nav className="navbar">
@@ -38,15 +59,7 @@ export const Navbar = () => {
             Sign up
           </Link>
           {userCreds ? (
-            <Link
-              className="nav_items"
-              to={"/signin"}
-              onClick={() => {
-                setEditMode(false);
-                setCanvasMode(false);
-                setUserCreds(null);
-              }}
-            >
+            <Link className="nav_items" onClick={signOut}>
               Sign Out
             </Link>
           ) : (

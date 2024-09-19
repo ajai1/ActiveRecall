@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { encode } from "base-64";
 import { ENDPOINTS, HEADERS } from "../../constants/apiConstants";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../contexts/user-context";
@@ -45,9 +46,9 @@ export const SignIn = () => {
         }),
       });
       const json = await response.text();
-      console.log("json is ", json);
-      if (json == "User signed in !!!") {
-        setUserCreds(formData.username);
+      console.log("json is ", json, response.status);
+      if (json == "User successfully signed in !!!" || response.status == 202) {
+        setUserCreds(encode(`${formData.username}:${formData.password}`));
         setError("");
         navigate("/");
       } else {
