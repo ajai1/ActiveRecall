@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useRef } from "react";
 import ReactQuill from "react-quill";
 import EditorToolbar, { modules, formats } from "./EditorToolbar";
 import "react-quill/dist/quill.snow.css";
@@ -6,18 +6,14 @@ import "../../../styles/flashcard/editor.css";
 import { CardContext } from "../../../contexts/card-context";
 
 export const Editor = () => {
-  const {
-    editMode,
-    quillRef,
-    canvasMode,
-    textContent,
-    setTextContent,
-    setDefaultHeaderInEditor,
-  } = useContext(CardContext);
+  const { editMode, canvasMode, textContent, setTextContent } =
+    useContext(CardContext);
 
-  useEffect(() => {
-    setDefaultHeaderInEditor();
-  }, []);
+  const quillRef = useRef();
+
+  const handleQuillChanges = (value) => {
+    setTextContent(value);
+  };
 
   return (
     <div className="text-editor" style={{ zIndex: canvasMode ? 0 : 1 }}>
@@ -26,7 +22,7 @@ export const Editor = () => {
         ref={quillRef}
         theme="snow"
         value={textContent.current}
-        onChange={setTextContent}
+        onChange={(e) => handleQuillChanges(e)}
         placeholder={!editMode ? "" : "Write something awesome..."}
         modules={modules}
         formats={formats}

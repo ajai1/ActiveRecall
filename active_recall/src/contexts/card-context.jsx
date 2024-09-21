@@ -14,6 +14,12 @@ export const CardContext = createContext({
   briefstatement: null,
   canvasMode: null,
   currentCardId: null,
+  currentCard: {
+    text: "",
+    briefstatement: "",
+    canvas: "",
+    header: "",
+  },
 });
 
 export const CardContextProvider = ({ children }) => {
@@ -29,9 +35,15 @@ export const CardContextProvider = ({ children }) => {
   const [eraserSelected, setEraserSelected] = useState(false);
   const [color, setColor] = useState("#000000");
   const [cardsFromSelectedDeck, setCardsFromSelectedDeck] = useState([]);
-  const [currentCard, setCurrentCard] = useState();
+  const [currentCard, setCurrentCard] = useState({
+    text: "",
+    briefstatement: "",
+    canvas: "",
+    header: "",
+  });
   const [reviewCards, setReviewCards] = useState(false);
   const [timerDone, setTimerDone] = useState(false);
+  const [shouldShuffle, setShouldShuffle] = useState(true);
 
   const quillRef = useRef("");
   const textContent = useRef("");
@@ -46,13 +58,19 @@ export const CardContextProvider = ({ children }) => {
   };
 
   const resetTheCard = () => {
-    setHeader("");
-    setBriefStatement("");
+    setCurrentCard({
+      text: "",
+      briefstatement: "",
+      canvas: "",
+      header: "",
+    });
     setTextContent("");
     if (flipCard) {
       setTimeout(() => {
         setDefaultHeaderInEditor();
       }, 250);
+    } else {
+      setDefaultHeaderInEditor();
     }
     setFlipCard(false);
     setCardRecallState(1);
@@ -76,7 +94,6 @@ export const CardContextProvider = ({ children }) => {
       .filter((card) => card.repetition < 6);
     if (cardsWithMinInterval.length == 0) {
       resetCardsIntervalAndRepetitions();
-      setReviewCards(true);
     } else {
       const shuffleCards = shuffle(cardsWithMinInterval);
       console.log("Shuffled Cards ", shuffleCards);
@@ -86,22 +103,22 @@ export const CardContextProvider = ({ children }) => {
   };
 
   const resetCardsIntervalAndRepetitions = () => {
-    if (deckname.length == 0) return;
-    const url = ENDPOINTS.DECKS.RESET_CARDS_INTERVAL_REPETITION.endpoint();
-    authFetch(url, {
-      method: ENDPOINTS.DECKS.RESET_CARDS_INTERVAL_REPETITION.method,
-      headers: HEADERS,
-      body: JSON.stringify({ deckname: deckname }),
-    }).then((response) => {
-      console.log("REFETCH DATA ", response);
-    });
+    if (reviewCards == false) {
+      if (deckname.length == 0) return;
+      const url = ENDPOINTS.DECKS.RESET_CARDS_INTERVAL_REPETITION.endpoint();
+      authFetch(url, {
+        method: ENDPOINTS.DECKS.RESET_CARDS_INTERVAL_REPETITION.method,
+        headers: HEADERS,
+        body: JSON.stringify({ deckname: deckname }),
+      }).then((response) => {
+        setReviewCards(true);
+        console.log("REFETCH DATA ", response);
+      });
+    }
   };
 
   const setCurrentCardStates = () => {
-    setHeader(currentCard.header);
-    setBriefStatement(currentCard.briefstatement);
     setTextContent(currentCard.text);
-    setCardRecallState(currentCard.recall);
     canvasImageLoad(currentCard.canvas);
   };
 
@@ -147,6 +164,7 @@ export const CardContextProvider = ({ children }) => {
     currentCard,
     reviewCards,
     timerDone,
+    shouldShuffle,
   };
 
   const contextRefs = {
@@ -175,6 +193,7 @@ export const CardContextProvider = ({ children }) => {
     setReviewCards,
     setCurrentCard,
     setDefaultHeaderInEditor,
+    setShouldShuffle,
   };
 
   const ctxValue = {
@@ -187,21 +206,31 @@ export const CardContextProvider = ({ children }) => {
 
   //Take the current Card from the deck set the states to show card
   useEffect(() => {
-    if (!editMode && currentCard) {
-      if (flipCard) {
-        setTimeout(() => {
+    if (currentCard) {
+      if (!editMode && currentCard) {
+        if (flipCard) {
+          setTimeout(() => {
+            setCurrentCardStates();
+          }, 250);
+          setFlipCard(false);
+        } else {
           setCurrentCardStates();
-        }, 250);
-        setFlipCard(false);
-      } else {
-        setCurrentCardStates();
+        }
       }
+      if (editMode && reviewCards) setCurrentCardStates();
     }
   }, [currentCard]);
 
   useEffect(() => {
-    if (cardsFromSelectedDeck && cardsFromSelectedDeck.length > 0) {
-      showNextCard();
+    if (
+      cardsFromSelectedDeck &&
+      cardsFromSelectedDeck.length > 0 &&
+      shouldShuffle
+    ) {
+      if (shouldShuffle) showNextCard();
+      else {
+        setCurrentCard(cardsFromSelectedDeck[0]);
+      }
     }
   }, [cardsFromSelectedDeck]);
 

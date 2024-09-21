@@ -11,7 +11,7 @@ import { CanvasControls } from "./Controls/CanvasControls";
 import { CardContext } from "../../contexts/card-context";
 
 export const CardBack = () => {
-  const { canvasMode, editMode } = useContext(CardContext);
+  const { canvasMode, editMode, currentCard } = useContext(CardContext);
   const { setCanvasMode } = useContext(CardContext);
 
   function canvasModeClick() {

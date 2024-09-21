@@ -14,9 +14,9 @@ export const CreateFlashCard = () => {
   }, []);
 
   useEffect(() => {
-    setDeckname(param.deck_id);
+    setDeckname(param.deckname);
     resetTheCard();
-  }, [param.deck_id]);
+  }, [param.deckname]);
 
   return (
     <div className="card_create_container">

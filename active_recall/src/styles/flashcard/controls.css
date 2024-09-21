@@ -32,3 +32,13 @@
 .icon {
   width: 1.75em;
 }
+
+.reset_btn {
+  background-color: #606676;
+  color: white;
+  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.575);
+  border-radius: 10px;
+  padding: 10px 10px;
+  cursor: pointer;
+  border: none;
+}

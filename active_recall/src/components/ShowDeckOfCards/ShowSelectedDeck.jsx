@@ -14,9 +14,8 @@ import { CardContext } from "../../contexts/card-context";
 import { ENDPOINTS, HEADERS } from "../../constants/apiConstants";
 import { useAuthFetch } from "../../hooks/authorization";
 
-export const ShowSelectedDeck = () => {
+export const ShowSelectedDeck = ({ dontShowControls }) => {
   const {
-    currentCardId,
     deckname,
     setDeckname,
     setCurrentCardId,
@@ -30,6 +29,7 @@ export const ShowSelectedDeck = () => {
     reviewCards,
     setReviewCards,
     setTimerDone,
+    editMode,
   } = useContext(CardContext);
 
   const param = useParams();
@@ -39,47 +39,52 @@ export const ShowSelectedDeck = () => {
   const [isNextDisabled, setIsNextDisabled] = useState(false);
 
   useEffect(() => {
-    if (currentCard) checkCurrentCardIndexAndDisableControls();
-  }, [currentCard]);
+    if (currentCard && cardsFromSelectedDeck)
+      checkCurrentCardIndexAndDisableControls();
+  }, [currentCard, cardsFromSelectedDeck]);
 
   const checkCurrentCardIndexAndDisableControls = () => {
     const currentCardId = findIndexOfTheCurrentCard();
-    if (currentCardId == 0) setIsPrevDisabled(true);
-    else if (currentCardId == cardsFromSelectedDeck.length - 1)
+    if (currentCardId == 0) {
+      setIsPrevDisabled(true);
+      if (currentCardId < cardsFromSelectedDeck.length - 1) {
+        setIsNextDisabled(false);
+      }
+    } else if (currentCardId == cardsFromSelectedDeck.length - 1) {
+      if (currentCardId > 0) {
+        setIsPrevDisabled(false);
+      }
       setIsNextDisabled(true);
-    else {
+    } else {
       setIsPrevDisabled(false);
       setIsNextDisabled(false);
     }
   };
 
   useEffect(() => {
-    if (timerDone == false) {
-      fetchCardsFromDeck(param.deck_id);
+    if (reviewCards == false && editMode == false && timerDone == false) {
+      fetchDeckAndCards(param.deckname);
     }
-  }, [param.deck_id, timerDone, reviewCards]);
+  }, [param.deckname, timerDone, reviewCards]);
 
-  const fetchCardsFromDeck = useCallback(
-    (deck_id) => {
-      const url = ENDPOINTS.DECKS.GET_DECK_BY_NAME.endpoint(deck_id);
-      authFetch(url, {
-        method: ENDPOINTS.DECKS.GET_DECK_BY_NAME.method,
-        headers: HEADERS,
-      })
-        .then((res) => res.json())
-        .then((json) => {
-          console.log("Setting JSON CARDS ", json);
-          setCardsFromSelectedDeck(json.deckEntity.cards);
-          setDeckname(param.deck_id);
-          setEditMode(false);
-          setCurrentCardId(0);
-          if (json.paused) {
-            setReviewCards(true);
-          }
-        });
-    },
-    [param.deck_id]
-  );
+  const fetchDeckAndCards = async (deckname) => {
+    const deckUrl = ENDPOINTS.DECKS.GET_DECK_BY_NAME.endpoint(deckname);
+    const deckMethod = ENDPOINTS.DECKS.GET_DECK_BY_NAME.method;
+    const deckResponse = await authFetch(deckUrl, { deckMethod });
+    const deckData = await deckResponse.json();
+    if (deckData.paused) {
+      setReviewCards(true);
+    }
+    const cardsUrl = ENDPOINTS.CARDS.GET_CARDS_FROM_DECK.endpoint(deckname);
+    const cardsMethod = ENDPOINTS.CARDS.GET_CARDS_FROM_DECK.method;
+    const cardsResponse = await authFetch(cardsUrl, { cardsMethod });
+    const cardsData = await cardsResponse.json();
+    console.log("cardsData  --- ", cardsData);
+    setCardsFromSelectedDeck(cardsData);
+    setDeckname(param.deckname);
+    setEditMode(false);
+    setCurrentCardId(0);
+  };
 
   const setCardFromIndex = (index) => {
     setCurrentCard(cardsFromSelectedDeck[index]);
@@ -144,7 +149,7 @@ export const ShowSelectedDeck = () => {
         <section className="card_controls">
           <CardControls deckname={deckname}></CardControls>
         </section>
-        {timerDone == true && (
+        {timerDone == true && dontShowControls == false && (
           <button
             className="try_again"
             onClick={() => {

@@ -1,4 +1,9 @@
 .card_control_container {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.card_controls {
+  width: 300px;
 }

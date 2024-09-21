@@ -1,9 +1,9 @@
 const getCardBackData = ({ textContent, canvasRef }) => {
   let imageData = "";
   let textData = "";
-  if (textContent.current.length > 0) {
+  if (textContent && textContent.length > 0) {
     let div = document.createElement("div");
-    div.innerHTML = textContent.current;
+    div.innerHTML = textContent;
     const images = div.getElementsByTagName("img");
     //imageData = getImageData(images);
     textData = div.getHTML();

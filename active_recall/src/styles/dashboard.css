@@ -23,11 +23,18 @@ header > h1 {
 }
 
 .deck_grid_container {
+  position: relative;
   display: grid;
   grid-template-columns: auto auto auto;
   grid-template-rows: auto auto auto;
   padding: 10px;
   gap: 40px 40px;
+}
+
+.deck_flex_container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 @media (max-height: 412px) {
@@ -50,20 +57,91 @@ header > h1 {
 }
 
 .deck_grid_item {
+  position: relative;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  background-color: #bec6a0;
+  background-color: #ffffff;
   padding: 20px;
   font-size: 30px;
   box-shadow: 1px 2px 5px black;
   height: 80px;
   width: auto;
+  transition: all 0.25s;
+}
+
+.deck_flex_item {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #a19e9e;
+  padding: 20px;
+  font-size: 30px;
+  height: 80px;
+  width: auto;
+  transition: all 0.25s;
+  cursor: pointer;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.386);
+  margin: 0 2rem;
+}
+
+.deck_flex_item:hover {
+  background-color: #cac8c8;
+}
+
+.deck_item_btn {
+  display: flex;
+  font-size: small;
+  margin-right: 10px;
 }
 
 .deck_grid_item:hover {
-  background-color: #b99470;
-  color: white;
+  box-shadow: 1px 2px 5px rgb(139, 210, 33);
+  color: rgb(0, 0, 0);
+}
+
+.deck_item_btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.deck_item_remove {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: small;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.deck_item_remove > img {
+  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.825);
+  border-radius: 50%;
+  transition: all 0.25s;
+}
+.deck_item_remove > img:hover {
+  box-shadow: 1px 2px 8px rgb(255, 0, 0);
+}
+
+.deck_item_edit {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  font-size: small;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.deck_item_edit > img {
+  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.825);
+  border-radius: 50%;
+  transition: all 0.25s;
+}
+
+.deck_item_edit > img:hover {
+  box-shadow: 1px 2px 8px rgb(0, 128, 255);
 }
 
 #deckNameInput {
@@ -78,7 +156,7 @@ header > h1 {
 
 #deckNameSubmit {
   width: 100%;
-  background-color: #b9d06c;
+  background-color: #4caf50;
   color: white;
   padding: 14px 20px;
   margin: 8px 0;

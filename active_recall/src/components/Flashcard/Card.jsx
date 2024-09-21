@@ -6,8 +6,9 @@ import { CardFront } from "./CardFront";
 import { CardBack } from "./CardBack";
 import { CardContext } from "../../contexts/card-context";
 
-export const Card = ({ deckname }) => {
-  const { flipCard, setDeckname, cardRecallState } = useContext(CardContext);
+export const Card = ({ deckname, card }) => {
+  const { flipCard, setDeckname, cardRecallState, currentCard } =
+    useContext(CardContext);
 
   useEffect(() => {
     setDeckname(deckname);
@@ -31,10 +32,10 @@ export const Card = ({ deckname }) => {
     <div className={`flashcard_container`}>
       <div className={`card ${flipCard ? "card_flip" : ""}`}>
         <div className={`card_front_container  ${getRecallStateStyle()}`}>
-          <CardFront />
+          <CardFront card={card} />
         </div>
         <div className={`card_back_container  ${getRecallStateStyle()}`}>
-          <CardBack />
+          <CardBack card={card} />
         </div>
       </div>
     </div>

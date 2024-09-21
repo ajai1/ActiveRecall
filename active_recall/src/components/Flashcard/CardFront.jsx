@@ -2,18 +2,17 @@ import React, { useContext } from "react";
 import "../../styles/flashcard/flashcard.css";
 import { CardContext } from "../../contexts/card-context";
 
-export const CardFront = () => {
-  /*   const {
-    isDeckShowMode,
-    header,
-    briefStatement,
-    setBriefStatement,
-    setHeader,
-  } = useContext(CardCreatorContext); */
+export const CardFront = ({ card }) => {
+  const { editMode, currentCard, setCurrentCard } = useContext(CardContext);
 
-  const { editMode, header, briefstatement, currentCard } =
-    useContext(CardContext);
-  const { setHeader, setBriefStatement } = useContext(CardContext);
+  const handleCardFrontChanges = (type, value) => {
+    if (type == "header" || type == "briefstatement") {
+      setCurrentCard((prev) => {
+        if (prev) prev[type] = value;
+        return { ...prev };
+      });
+    }
+  };
 
   return (
     <>
@@ -21,8 +20,10 @@ export const CardFront = () => {
         <input
           style={{ textAlign: "center" }}
           className="flashcard_header"
-          value={header}
-          onChange={(event) => setHeader(event.target.value)}
+          value={card ? card.header : currentCard ? currentCard.header : ""}
+          onChange={(event) =>
+            handleCardFrontChanges("header", event.target.value)
+          }
           type="text"
           placeholder={editMode ? "Enter the Header" : ""}
           readOnly={editMode ? false : true}
@@ -31,8 +32,16 @@ export const CardFront = () => {
         <textarea
           className="flashcard_textarea"
           placeholder={editMode ? "Enter the content" : ""}
-          value={briefstatement}
-          onChange={(event) => setBriefStatement(event.target.value)}
+          value={
+            card
+              ? card.briefstatement
+              : currentCard
+              ? currentCard.briefstatement
+              : ""
+          }
+          onChange={(event) =>
+            handleCardFrontChanges("briefstatement", event.target.value)
+          }
           readOnly={editMode ? false : true}
         ></textarea>
       </>

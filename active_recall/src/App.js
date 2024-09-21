@@ -14,6 +14,7 @@ import { SignUp } from "./components/Login/SignUp";
 import { SignIn } from "./components/Login/SignIn";
 import { useContext } from "react";
 import { UserContext } from "./contexts/user-context";
+import { DeckEdit } from "./components/ShowDeckOfCards/DeckEdit";
 
 const ProtectedRoute = ({ children }) => {
   const { userCreds } = useContext(UserContext);
@@ -40,7 +41,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/create/:deck_id",
+        path: "/create/:deckname",
         element: (
           <ProtectedRoute>
             <CreateFlashCard />
@@ -56,10 +57,18 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/deck-of-cards/:deck_id",
+        path: "/deck-of-cards/:deckname",
         element: (
           <ProtectedRoute>
             <ShowSelectedDeck />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/deck-of-cards/edit/:deckname",
+        element: (
+          <ProtectedRoute>
+            <DeckEdit />
           </ProtectedRoute>
         ),
       },
