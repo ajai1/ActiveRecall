@@ -8,7 +8,7 @@ import { useAuthFetch } from "../hooks/authorization";
 import { ENDPOINTS, HEADERS } from "../constants/apiConstants";
 
 export const Navbar = () => {
-  const { setEditMode, setCanvasMode } = useContext(CardContext);
+  const { setEditMode, setCanvasMode, setError } = useContext(CardContext);
   const { userCreds, setUserCreds } = useContext(UserContext);
 
   const navigate = useNavigate();
@@ -20,13 +20,18 @@ export const Navbar = () => {
     authFetch(url, {
       method: ENDPOINTS.USERS.SIGNOUT.method,
       headers: HEADERS,
-    }).then((response) => {
-      console.log("LOGGED OUT");
-      setEditMode(false);
-      setCanvasMode(false);
-      setUserCreds(null);
-      navigate("/signin");
-    });
+    })
+      .then((response) => {
+        console.log("LOGGED OUT");
+        setEditMode(false);
+        setCanvasMode(false);
+        setUserCreds(null);
+        navigate("/signin");
+      })
+      .catch((error) => {
+        console.log(error);
+        setError("Logout API call failed.");
+      });
   };
 
   return (

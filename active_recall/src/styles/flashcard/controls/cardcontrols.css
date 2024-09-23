@@ -4,6 +4,10 @@
   margin-top: 30px;
 }
 
+.card_control_container_single {
+  justify-content: center;
+}
+
 .card_controls {
   width: 300px;
 }

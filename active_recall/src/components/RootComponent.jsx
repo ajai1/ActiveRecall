@@ -1,28 +1,25 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Navbar } from "./Navbar";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 import "../styles/rootcomponent.css";
-import { CardContext, CardContextProvider } from "../contexts/card-context";
+import { CardContextProvider } from "../contexts/card-context";
+import { AppContext } from "../contexts/app-context";
 
 export const RootComponent = () => {
-  const navigate = useNavigate();
+  const { pageInfo } = useContext(AppContext);
+
   return (
     <CardContextProvider>
       <Navbar />
       <div className="grid_container">
         <header className="grid_item">
-          <h3>Welcome to</h3>
-          <h1>Active Recall</h1>
+          <h1>{pageInfo.header}</h1>
+          <p>{pageInfo.info}</p>
         </header>
         <div className="grid_item">
           <Outlet />
         </div>
-        <footer className="grid_item">
-          <div className="goback_btn" onClick={() => navigate(-1)}>
-            Go Back
-          </div>
-        </footer>
       </div>
     </CardContextProvider>
   );

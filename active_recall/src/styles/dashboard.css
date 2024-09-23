@@ -75,7 +75,7 @@ header > h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #a19e9e;
+  background-color: #c8c6c6;
   padding: 20px;
   font-size: 30px;
   height: 80px;
@@ -87,12 +87,12 @@ header > h1 {
 }
 
 .deck_flex_item:hover {
-  background-color: #cac8c8;
+  background-color: #e6e4e4;
 }
 
 .deck_item_btn {
   display: flex;
-  font-size: small;
+  font-size: medium;
   margin-right: 10px;
 }
 

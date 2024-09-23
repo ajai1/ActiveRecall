@@ -1,9 +1,8 @@
 import { createContext, useState, useRef, useEffect, useCallback } from "react";
-import { useSaveToLocalStorage } from "../hooks/saveToStorage";
 import { shuffle } from "../utils/Utilities";
-import { getLocalStorage } from "../utils/localStorageService";
 import { ENDPOINTS, HEADERS } from "../constants/apiConstants";
 import { useAuthFetch } from "../hooks/authorization";
+import { useNavigate } from "react-router-dom";
 
 export const CardContext = createContext({
   deckname: null,
@@ -44,12 +43,15 @@ export const CardContextProvider = ({ children }) => {
   const [reviewCards, setReviewCards] = useState(false);
   const [timerDone, setTimerDone] = useState(false);
   const [shouldShuffle, setShouldShuffle] = useState(true);
+  const [error, setError] = useState(null);
 
   const quillRef = useRef("");
   const textContent = useRef("");
   const canvasRef = useRef("");
 
   const authFetch = useAuthFetch();
+
+  const navigate = useNavigate();
 
   // ---------------------------------------------------------------------------
 
@@ -110,10 +112,15 @@ export const CardContextProvider = ({ children }) => {
         method: ENDPOINTS.DECKS.RESET_CARDS_INTERVAL_REPETITION.method,
         headers: HEADERS,
         body: JSON.stringify({ deckname: deckname }),
-      }).then((response) => {
-        setReviewCards(true);
-        console.log("REFETCH DATA ", response);
-      });
+      })
+        .then((response) => {
+          setReviewCards(true);
+          console.log("REFETCH DATA ", response);
+        })
+        .catch((error) => {
+          console.log(error);
+          setError(`Reset Cards Interval API call failed.`);
+        });
     }
   };
 
@@ -165,6 +172,7 @@ export const CardContextProvider = ({ children }) => {
     reviewCards,
     timerDone,
     shouldShuffle,
+    error,
   };
 
   const contextRefs = {
@@ -194,6 +202,7 @@ export const CardContextProvider = ({ children }) => {
     setCurrentCard,
     setDefaultHeaderInEditor,
     setShouldShuffle,
+    setError,
   };
 
   const ctxValue = {
@@ -222,17 +231,15 @@ export const CardContextProvider = ({ children }) => {
   }, [currentCard]);
 
   useEffect(() => {
-    if (
-      cardsFromSelectedDeck &&
-      cardsFromSelectedDeck.length > 0 &&
-      shouldShuffle
-    ) {
+    console.log("CARDS FROM DECK ", shouldShuffle);
+    if (cardsFromSelectedDeck && cardsFromSelectedDeck.length > 0) {
       if (shouldShuffle) showNextCard();
       else {
+        setCurrentCardId(0);
         setCurrentCard(cardsFromSelectedDeck[0]);
       }
     }
-  }, [cardsFromSelectedDeck]);
+  }, [cardsFromSelectedDeck, shouldShuffle]);
 
   useEffect(() => {
     if (reviewCards) {
@@ -241,6 +248,12 @@ export const CardContextProvider = ({ children }) => {
       }, 5000);
     }
   }, [reviewCards]);
+
+  useEffect(() => {
+    if (error) {
+      navigate("/error");
+    }
+  }, [error]);
 
   return (
     <CardContext.Provider value={ctxValue}>{children}</CardContext.Provider>

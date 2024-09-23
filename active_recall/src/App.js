@@ -15,6 +15,8 @@ import { SignIn } from "./components/Login/SignIn";
 import { useContext } from "react";
 import { UserContext } from "./contexts/user-context";
 import { DeckEdit } from "./components/ShowDeckOfCards/DeckEdit";
+import { ErrorPage } from "./components/ErrorPage";
+import { AppContextProvider } from "./contexts/app-context";
 
 const ProtectedRoute = ({ children }) => {
   const { userCreds } = useContext(UserContext);
@@ -72,6 +74,10 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      {
+        path: "/error",
+        element: <ErrorPage />,
+      },
     ],
   },
 ]);
@@ -79,7 +85,9 @@ const router = createBrowserRouter([
 function App() {
   return (
     <div className="App">
-      <RouterProvider router={router}></RouterProvider>
+      <AppContextProvider>
+        <RouterProvider router={router}></RouterProvider>
+      </AppContextProvider>
     </div>
   );
 }

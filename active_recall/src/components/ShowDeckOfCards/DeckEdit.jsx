@@ -1,17 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useAuthFetch } from "../../hooks/authorization";
 import { ENDPOINTS } from "../../constants/apiConstants";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import "../../styles/editdeck.css";
 import { CardContext } from "../../contexts/card-context";
 import { ShowSelectedDeck } from "./ShowSelectedDeck";
+import { AppContext } from "../../contexts/app-context";
 
 export const DeckEdit = () => {
   const [newDeckName, setNewDeckName] = useState();
   const [currentEditDeck, setCurrentEditDeck] = useState();
   const {
-    cardsFromSelectedDeck,
     deckname,
     setCardsFromSelectedDeck,
     setEditMode,
@@ -20,9 +20,17 @@ export const DeckEdit = () => {
     setShouldShuffle,
     setFlipCard,
     setTimerDone,
+    setError,
+    setCurrentCardId,
+    addCardsSelectedFromDeck,
   } = useContext(CardContext);
 
+  const { setPageInfo } = useContext(AppContext);
+
   const authFetch = useAuthFetch();
+
+  const navigate = useNavigate();
+
   const params = useParams();
 
   const handleChange = (e) => {
@@ -31,42 +39,29 @@ export const DeckEdit = () => {
 
   const fetchDeckAndCards = async (deckname) => {
     return new Promise(async (resolve, reject) => {
-      const cardsUrl = ENDPOINTS.CARDS.GET_CARDS_FROM_DECK.endpoint(deckname);
-      const cardsMethod = ENDPOINTS.CARDS.GET_CARDS_FROM_DECK.method;
-      const cardsResponse = await authFetch(cardsUrl, { cardsMethod });
-      const cardsData = await cardsResponse.json();
-      setCardsFromSelectedDeck(cardsData);
-
-      const deckUrl = ENDPOINTS.DECKS.GET_DECK_BY_NAME.endpoint(deckname);
-      const deckMethod = ENDPOINTS.DECKS.GET_DECK_BY_NAME.method;
-      const deckResponse = await authFetch(deckUrl, { deckMethod });
-      const deckData = await deckResponse.json();
-      setCurrentEditDeck(deckData.deckEntity);
-      resolve(true);
+      try {
+        const cardsUrl = ENDPOINTS.CARDS.GET_CARDS_FROM_DECK.endpoint(deckname);
+        const cardsMethod = ENDPOINTS.CARDS.GET_CARDS_FROM_DECK.method;
+        const cardsResponse = await authFetch(cardsUrl, { cardsMethod });
+        const cardsData = await cardsResponse.json();
+        setCardsFromSelectedDeck(cardsData);
+      } catch (error) {
+        console.log(error);
+        reject("Get Cards from Deck API call failed.");
+      }
+      try {
+        const deckUrl = ENDPOINTS.DECKS.GET_DECK_BY_NAME.endpoint(deckname);
+        const deckMethod = ENDPOINTS.DECKS.GET_DECK_BY_NAME.method;
+        const deckResponse = await authFetch(deckUrl, { deckMethod });
+        const deckData = await deckResponse.json();
+        setCurrentEditDeck(deckData.deckEntity);
+        resolve(true);
+      } catch (error) {
+        console.log(error);
+        reject("Get Deck API call failed.");
+      }
     });
   };
-
-  useEffect(() => {
-    if (params.deckname) {
-      fetchDeckAndCards(params.deckname).then(() => {
-        setShouldShuffle(false);
-        setDeckname(params.deckname);
-        setEditMode(true);
-        setReviewCards(true);
-        console.log("SETTED ALL CARDS AND SHUFFLE TO FALSE");
-      });
-    }
-  }, [params.deckname]);
-
-  useEffect(() => {
-    return () => {
-      setReviewCards(false);
-      setEditMode(false);
-      setFlipCard(false);
-      setShouldShuffle(true);
-      setTimerDone(false);
-    };
-  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -77,11 +72,52 @@ export const DeckEdit = () => {
     authFetch(url, {
       method,
       body: JSON.stringify(newDeck),
-    }).then((res) => {
-      console.log("Update done = ", res);
-      setCurrentEditDeck({ ...newDeck });
-    });
+    })
+      .then((res) => {
+        console.log("Update done = ", res);
+        setCurrentEditDeck({ ...newDeck });
+      })
+      .catch((error) => {
+        console.log(error);
+        setError(`Update Deck API call failed.`);
+      });
   };
+
+  useEffect(() => {
+    if (params.deckname) {
+      fetchDeckAndCards(params.deckname)
+        .then(() => {
+          setShouldShuffle(false);
+          setDeckname(params.deckname);
+          setEditMode(true);
+          setReviewCards(true);
+          console.log("SETTED ALL CARDS AND SHUFFLE TO FALSE");
+        })
+        .catch((error) => {
+          console.log(error);
+          setError(`Fetch Deck and Cards API call failed. ${error}`);
+        });
+    }
+  }, [params.deckname]);
+
+  useEffect(() => {
+    setPageInfo({
+      header: "Modify Deck",
+      info: "You can edit the deck name, or edit cards or add new cards to the deck",
+    });
+    return () => {
+      setPageInfo({
+        header: "Welcome to Active Recall",
+        info: ``,
+      });
+      setReviewCards(false);
+      setEditMode(false);
+      setFlipCard(false);
+      setShouldShuffle(true);
+      setTimerDone(false);
+      setCurrentCardId(0);
+    };
+  }, []);
 
   return (
     <div className="edit_deck_container">
@@ -112,6 +148,16 @@ export const DeckEdit = () => {
           <ShowSelectedDeck dontShowControls={true} />
         </div>
       )}
+      <div>
+        <button
+          className="control_btn"
+          onClick={() => {
+            navigate(`/create/${deckname}`);
+          }}
+        >
+          Add New Cards
+        </button>
+      </div>
     </div>
   );
 };

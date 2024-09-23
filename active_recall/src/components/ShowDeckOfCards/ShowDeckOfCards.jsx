@@ -7,6 +7,7 @@ import { useAuthFetch } from "../../hooks/authorization";
 import DeleteIcon from "../../static/icons/delete.png";
 import EditIcon from "../../static/icons/edit.png";
 import { DeckEdit } from "./DeckEdit";
+import { AppContext } from "../../contexts/app-context";
 
 export const ShowDeckOfCards = () => {
   const navigate = useNavigate();
@@ -22,23 +23,42 @@ export const ShowDeckOfCards = () => {
     setFlipCard,
     setShouldShuffle,
     setTimerDone,
+    setError,
   } = useContext(CardContext);
+
+  const { setPageInfo } = useContext(AppContext);
 
   const authFetch = useAuthFetch();
 
   //Select the deck and store cards
   useEffect(() => {
     async function getDeckForUser() {
-      const url = ENDPOINTS.DECKS.GET_ALL_DECKS.endpoint();
-      const method = ENDPOINTS.DECKS.GET_ALL_DECKS.method;
-      const response = await authFetch(url, { method });
-      const data = await response.json();
-      setAllDecks(data);
-      return "";
+      try {
+        const url = ENDPOINTS.DECKS.GET_ALL_DECKS.endpoint();
+        const method = ENDPOINTS.DECKS.GET_ALL_DECKS.method;
+        const response = await authFetch(url, { method });
+        const data = await response.json();
+        setAllDecks(data);
+        return "";
+      } catch (error) {
+        console.log(error);
+        setError("Error in fetching all decks for user.");
+      }
     }
+    setPageInfo({
+      header: "Your Deck of Cards",
+      info: `Select a deck to carry out a session of active recall | Edit or Remove Deck`,
+    });
     getDeckForUser();
     setEditMode(false);
     setReviewCards(false);
+
+    return () => {
+      setPageInfo({
+        header: "Welcome to Active Recall",
+        info: ``,
+      });
+    };
   }, []);
 
   function fetchCardsFromDeck(deckname) {
@@ -48,17 +68,22 @@ export const ShowDeckOfCards = () => {
   }
 
   const handleDeckNameSelect = (deck) => {
-    fetchCardsFromDeck(deck.deckname).then((data) => {
-      setCardsFromSelectedDeck(data);
-      setDeckname(deck.deckname);
-      setEditMode(false);
-      setReviewCards(false);
-      setFlipCard(false);
-      setShouldShuffle(true);
-      setTimerDone(false);
-      setCurrentCardId(0);
-      navigate(`/deck-of-cards/${deck.deckname}`);
-    });
+    fetchCardsFromDeck(deck.deckname)
+      .then((data) => {
+        setCardsFromSelectedDeck(data);
+        setDeckname(deck.deckname);
+        setEditMode(false);
+        setReviewCards(false);
+        setFlipCard(false);
+        setShouldShuffle(true);
+        setTimerDone(false);
+        setCurrentCardId(0);
+        navigate(`/deck-of-cards/${deck.deckname}`);
+      })
+      .catch((error) => {
+        console.log(error);
+        setError("Failed to load the selected deck from the API response.");
+      });
   };
 
   const deleteDeck = (deckId, event) => {
@@ -70,26 +95,36 @@ export const ShowDeckOfCards = () => {
       body: JSON.stringify({
         id: deckId,
       }),
-    }).then((response) => {
-      console.log("Deck Removed ", response);
-      setAllDecks((prev) => {
-        return prev.filter((each) => each.id != deckId);
+    })
+      .then((response) => {
+        console.log("Deck Removed ", response);
+        setAllDecks((prev) => {
+          return prev.filter((each) => each.id != deckId);
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        setError(`Remove Deck API call failed.`);
       });
-    });
   };
 
   const editThisDeck = (deck, event) => {
     event.stopPropagation();
     console.log("SELECTED DECK - deck", deck);
-    fetchCardsFromDeck(deck.deckname).then((data) => {
-      setCardsFromSelectedDeck(data);
-      setDeckname(deck.deckname);
-      setShouldShuffle(false);
-      setEditMode(true);
-      setReviewCards(true);
-      setFlipCard(false);
-      navigate(`/deck-of-cards/edit/${deck.deckname}`);
-    });
+    fetchCardsFromDeck(deck.deckname)
+      .then((data) => {
+        setCardsFromSelectedDeck(data);
+        setDeckname(deck.deckname);
+        setShouldShuffle(false);
+        setEditMode(true);
+        setReviewCards(true);
+        setFlipCard(false);
+        navigate(`/deck-of-cards/edit/${deck.deckname}`);
+      })
+      .catch((error) => {
+        console.log(error);
+        setError(`Modify Deck API call failed.`);
+      });
   };
 
   return (
@@ -107,13 +142,13 @@ export const ShowDeckOfCards = () => {
                 className="deck_item_btn"
                 onClick={(e) => editThisDeck(eachDeck, e)}
               >
-                <img src={EditIcon} width={"25px"} /> <span>Edit</span>
+                <img src={EditIcon} width={"30rem"} /> <span>Edit</span>
               </aside>
               <aside
                 className="deck_item_btn"
                 onClick={(e) => deleteDeck(eachDeck.id, e)}
               >
-                <img src={DeleteIcon} width={"25px"} /> <span>Remove</span>
+                <img src={DeleteIcon} width={"30rem"} /> <span>Remove</span>
               </aside>
             </div>
           </section>

@@ -25,42 +25,57 @@ export const CardControls = () => {
     cardsFromSelectedDeck,
     setCardsFromSelectedDeck,
     setCurrentCard,
+    setError,
   } = useContext(CardContext);
 
   //API call
   const addCardToTheDeck = () => {
-    const cardData = getCardData({
-      header: currentCard.header,
-      briefstatement: currentCard.briefstatement,
-      textContent: textContent.current,
-      canvasRef,
-    });
-    const { header, briefstatement, canvas, text } = cardData;
-    if (editMode && reviewCards) {
-      const url = ENDPOINTS.CARDS.UPDATE_CARD.endpoint(deckname);
-      authFetch(url, {
-        method: ENDPOINTS.CARDS.UPDATE_CARD.method,
-        headers: HEADERS,
-        body: JSON.stringify({
-          ...currentCard,
-          header,
-          briefstatement,
-          canvas,
-          text,
-        }),
-      }).then((response) => {
-        console.log("Updated");
-        replaceCardInDeck();
+    if (currentCard.header && currentCard.header.length > 0) {
+      const cardData = getCardData({
+        header: currentCard.header,
+        briefstatement: currentCard.briefstatement,
+        textContent: textContent.current,
+        canvasRef,
       });
+      const { header, briefstatement, canvas, text } = cardData;
+      if (editMode && reviewCards && currentCard.id) {
+        const url = ENDPOINTS.CARDS.UPDATE_CARD.endpoint(deckname);
+        authFetch(url, {
+          method: ENDPOINTS.CARDS.UPDATE_CARD.method,
+          headers: HEADERS,
+          body: JSON.stringify({
+            ...currentCard,
+            header,
+            briefstatement,
+            canvas,
+            text,
+          }),
+        })
+          .then((response) => {
+            console.log("Updated");
+            replaceCardInDeck();
+          })
+          .catch((error) => {
+            console.log(error);
+            setError("Update Card API call failed.");
+          });
+      } else {
+        const url = ENDPOINTS.CARDS.CREATE_CARD.endpoint(deckname);
+        authFetch(url, {
+          method: ENDPOINTS.CARDS.CREATE_CARD.method,
+          headers: HEADERS,
+          body: JSON.stringify(cardData),
+        })
+          .then((response) => {
+            resetTheCard();
+          })
+          .catch((error) => {
+            console.log(error);
+            setError("Create Card API call failed.");
+          });
+      }
     } else {
-      const url = ENDPOINTS.CARDS.CREATE_CARD.endpoint(deckname);
-      authFetch(url, {
-        method: ENDPOINTS.CARDS.CREATE_CARD.method,
-        headers: HEADERS,
-        body: JSON.stringify(cardData),
-      }).then((response) => {
-        resetTheCard();
-      });
+      alert("Add a Header to the Card");
     }
   };
 
@@ -82,21 +97,25 @@ export const CardControls = () => {
   };
 
   return (
-    <div className="card_control_container">
+    <div
+      className={`card_control_container ${
+        !editMode && "card_control_container_single"
+      }`}
+    >
       <button
-        className="reset_btn"
+        className="control_btn"
         onClick={() => setFlipCard((prev) => !prev)}
       >
         Flip the Card
       </button>
 
       {editMode && (
-        <button className="reset_btn" onClick={() => addCardToTheDeck()}>
-          Add Card
+        <button className="control_btn" onClick={() => addCardToTheDeck()}>
+          {editMode && reviewCards ? "Modify Card" : "Add Card"}
         </button>
       )}
       {editMode && (
-        <button className="reset_btn" onClick={() => resetCardData()}>
+        <button className="control_btn" onClick={() => resetCardData()}>
           Reset
         </button>
       )}

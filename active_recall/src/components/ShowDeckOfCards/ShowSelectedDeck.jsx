@@ -13,6 +13,7 @@ import { RecallControls } from "../Flashcard/Controls/recallControls";
 import { CardContext } from "../../contexts/card-context";
 import { ENDPOINTS, HEADERS } from "../../constants/apiConstants";
 import { useAuthFetch } from "../../hooks/authorization";
+import { AppContext } from "../../contexts/app-context";
 
 export const ShowSelectedDeck = ({ dontShowControls }) => {
   const {
@@ -30,7 +31,11 @@ export const ShowSelectedDeck = ({ dontShowControls }) => {
     setReviewCards,
     setTimerDone,
     editMode,
+    setError,
+    resetTheCard,
   } = useContext(CardContext);
+
+  const { setPageInfo } = useContext(AppContext);
 
   const param = useParams();
   const authFetch = useAuthFetch();
@@ -42,6 +47,24 @@ export const ShowSelectedDeck = ({ dontShowControls }) => {
     if (currentCard && cardsFromSelectedDeck)
       checkCurrentCardIndexAndDisableControls();
   }, [currentCard, cardsFromSelectedDeck]);
+
+  useEffect(() => {
+    if (!dontShowControls) {
+      setPageInfo({
+        header: "Active Recall Session",
+        info: "Learn the card, if you dont know well, expect to relearn again.",
+      });
+    }
+    if (reviewCards == false && editMode == false && timerDone == false) {
+      fetchDeckAndCards(param.deckname);
+    }
+    return () => {
+      setPageInfo({
+        header: "Welcome to Active Recall",
+        info: ``,
+      });
+    };
+  }, [param.deckname, timerDone, reviewCards]);
 
   const checkCurrentCardIndexAndDisableControls = () => {
     const currentCardId = findIndexOfTheCurrentCard();
@@ -61,32 +84,37 @@ export const ShowSelectedDeck = ({ dontShowControls }) => {
     }
   };
 
-  useEffect(() => {
-    if (reviewCards == false && editMode == false && timerDone == false) {
-      fetchDeckAndCards(param.deckname);
-    }
-  }, [param.deckname, timerDone, reviewCards]);
-
   const fetchDeckAndCards = async (deckname) => {
-    const deckUrl = ENDPOINTS.DECKS.GET_DECK_BY_NAME.endpoint(deckname);
-    const deckMethod = ENDPOINTS.DECKS.GET_DECK_BY_NAME.method;
-    const deckResponse = await authFetch(deckUrl, { deckMethod });
-    const deckData = await deckResponse.json();
-    if (deckData.paused) {
-      setReviewCards(true);
+    try {
+      const deckUrl = ENDPOINTS.DECKS.GET_DECK_BY_NAME.endpoint(deckname);
+      const deckMethod = ENDPOINTS.DECKS.GET_DECK_BY_NAME.method;
+      const deckResponse = await authFetch(deckUrl, { deckMethod });
+      const deckData = await deckResponse.json();
+      if (deckData.paused) {
+        setReviewCards(true);
+      }
+    } catch (error) {
+      console.log(error);
+      setError(`Get Deck API call failed.`);
     }
-    const cardsUrl = ENDPOINTS.CARDS.GET_CARDS_FROM_DECK.endpoint(deckname);
-    const cardsMethod = ENDPOINTS.CARDS.GET_CARDS_FROM_DECK.method;
-    const cardsResponse = await authFetch(cardsUrl, { cardsMethod });
-    const cardsData = await cardsResponse.json();
-    console.log("cardsData  --- ", cardsData);
-    setCardsFromSelectedDeck(cardsData);
-    setDeckname(param.deckname);
-    setEditMode(false);
-    setCurrentCardId(0);
+    try {
+      const cardsUrl = ENDPOINTS.CARDS.GET_CARDS_FROM_DECK.endpoint(deckname);
+      const cardsMethod = ENDPOINTS.CARDS.GET_CARDS_FROM_DECK.method;
+      const cardsResponse = await authFetch(cardsUrl, { cardsMethod });
+      const cardsData = await cardsResponse.json();
+      console.log("cardsData  --- ", cardsData);
+      setCardsFromSelectedDeck(cardsData);
+      setDeckname(param.deckname);
+      setEditMode(false);
+      setCurrentCardId(0);
+    } catch (error) {
+      console.log(error);
+      setError(`Get Cards from Deck API call failed.`);
+    }
   };
 
   const setCardFromIndex = (index) => {
+    console.log("CURRENT");
     setCurrentCard(cardsFromSelectedDeck[index]);
   };
 
@@ -96,7 +124,6 @@ export const ShowSelectedDeck = ({ dontShowControls }) => {
 
   const handleCardID = (type) => {
     const currentId = findIndexOfTheCurrentCard();
-
     if (currentId >= cardsFromSelectedDeck.length - 1 && type == "next") {
       return;
     }

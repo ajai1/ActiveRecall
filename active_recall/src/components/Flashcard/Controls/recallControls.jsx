@@ -12,6 +12,7 @@ export const RecallControls = () => {
     setCardsFromSelectedDeck,
     currentCard,
     reviewCards,
+    setError,
   } = useContext(CardContext);
 
   const authFetch = useAuthFetch();
@@ -27,6 +28,10 @@ export const RecallControls = () => {
       .then((res) => res.json())
       .then((json) => {
         //console.log("Updated the card ", json);
+      })
+      .catch((error) => {
+        console.log(error);
+        setError("Create Card API call failed.");
       });
   };
 

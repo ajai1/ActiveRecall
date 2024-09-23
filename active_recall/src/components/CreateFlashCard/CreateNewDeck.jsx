@@ -3,12 +3,27 @@ import { useNavigate } from "react-router-dom";
 import { ENDPOINTS, HEADERS } from "../../constants/apiConstants";
 import { CardContext } from "../../contexts/card-context";
 import { useAuthFetch } from "../../hooks/authorization";
+import { AppContext } from "../../contexts/app-context";
 
 export const CreateNewDeck = () => {
-  const { setDeckname, setEditMode } = useContext(CardContext);
+  const { setDeckname, setEditMode, setError } = useContext(CardContext);
+  const { setPageInfo } = useContext(AppContext);
   const navigate = useNavigate();
 
   const authFetch = useAuthFetch();
+
+  useEffect(() => {
+    setPageInfo({
+      header: "Create a New Deck of Cards",
+      info: `You can name your deck (group of card) and add flip cards to it for learning`,
+    });
+    return () => {
+      setPageInfo({
+        header: "Welcome to Active Recall",
+        info: ``,
+      });
+    };
+  }, []);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -24,16 +39,20 @@ export const CreateNewDeck = () => {
       body: JSON.stringify({
         deckname: deckNameValue,
       }),
-    }).then((response) => {
-      setDeckname(deckNameValue);
-      setEditMode(true);
-      navigate(`/create/${deckNameValue}`);
-    });
+    })
+      .then((response) => {
+        setDeckname(deckNameValue);
+        setEditMode(true);
+        navigate(`/create/${deckNameValue}`);
+      })
+      .catch((error) => {
+        console.log(error);
+        setError("Create new deck API call failed.");
+      });
   };
   return (
     <>
       <section>
-        <h3>Create a new Deck</h3>
         <form
           style={{ textAlign: "left" }}
           onSubmit={(e) => handleFormSubmit(e)}
