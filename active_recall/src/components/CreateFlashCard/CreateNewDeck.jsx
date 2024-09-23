@@ -17,12 +17,6 @@ export const CreateNewDeck = () => {
       header: "Create a New Deck of Cards",
       info: `You can name your deck (group of card) and add flip cards to it for learning`,
     });
-    return () => {
-      setPageInfo({
-        header: "Welcome to Active Recall",
-        info: ``,
-      });
-    };
   }, []);
 
   const handleFormSubmit = (e) => {

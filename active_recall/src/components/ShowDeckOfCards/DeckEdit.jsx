@@ -106,10 +106,6 @@ export const DeckEdit = () => {
       info: "You can edit the deck name, or edit cards or add new cards to the deck",
     });
     return () => {
-      setPageInfo({
-        header: "Welcome to Active Recall",
-        info: ``,
-      });
       setReviewCards(false);
       setEditMode(false);
       setFlipCard(false);
@@ -152,7 +148,8 @@ export const DeckEdit = () => {
         <button
           className="control_btn"
           onClick={() => {
-            navigate(`/create/${deckname}`);
+            console.log("GOING TO deckname ", currentEditDeck.deckname);
+            navigate(`/create/${currentEditDeck.deckname}`);
           }}
         >
           Add New Cards

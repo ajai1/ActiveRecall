@@ -58,12 +58,6 @@ export const ShowSelectedDeck = ({ dontShowControls }) => {
     if (reviewCards == false && editMode == false && timerDone == false) {
       fetchDeckAndCards(param.deckname);
     }
-    return () => {
-      setPageInfo({
-        header: "Welcome to Active Recall",
-        info: ``,
-      });
-    };
   }, [param.deckname, timerDone, reviewCards]);
 
   const checkCurrentCardIndexAndDisableControls = () => {

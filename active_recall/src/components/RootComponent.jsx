@@ -1,13 +1,34 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Navbar } from "./Navbar";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 
 import "../styles/rootcomponent.css";
 import { CardContextProvider } from "../contexts/card-context";
 import { AppContext } from "../contexts/app-context";
 
 export const RootComponent = () => {
-  const { pageInfo } = useContext(AppContext);
+  const { pageInfo, setPageInfo } = useContext(AppContext);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname == "/") {
+      setPageInfo({
+        header: "Welcome to Active Recall",
+        info: "",
+      });
+    } else if (location.pathname == "/signup") {
+      setPageInfo({
+        header: "Welcome to Active Recall",
+        info: "Sign Up here",
+      });
+    } else if (location.pathname == "/signin") {
+      setPageInfo({
+        header: "Welcome to Active Recall",
+        info: "Login here",
+      });
+    }
+  }, [location]);
 
   return (
     <CardContextProvider>

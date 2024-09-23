@@ -52,13 +52,6 @@ export const ShowDeckOfCards = () => {
     getDeckForUser();
     setEditMode(false);
     setReviewCards(false);
-
-    return () => {
-      setPageInfo({
-        header: "Welcome to Active Recall",
-        info: ``,
-      });
-    };
   }, []);
 
   function fetchCardsFromDeck(deckname) {

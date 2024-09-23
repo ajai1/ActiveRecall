@@ -69,5 +69,9 @@ export const ENDPOINTS = {
       method: REQUEST_METHODS.PUT,
       endpoint: (deckname) => `${CONFIG.LOCAL_BASE}/cards/${deckname}`,
     },
+    REMOVE_CARD: {
+      method: REQUEST_METHODS.DELETE,
+      endpoint: (deckname) => `${CONFIG.LOCAL_BASE}/cards/${deckname}`,
+    },
   },
 };

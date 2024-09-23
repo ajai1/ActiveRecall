@@ -10,9 +10,11 @@ import { CardContext } from "../../../contexts/card-context";
 import { useAuthFetch } from "../../../hooks/authorization";
 
 import ResetIcon from "../../../static/icons/reset.png";
+import { useParams } from "react-router-dom";
 
 export const CardControls = () => {
   const authFetch = useAuthFetch();
+  const param = useParams();
   const {
     editMode,
     deckname,
@@ -38,6 +40,7 @@ export const CardControls = () => {
         canvasRef,
       });
       const { header, briefstatement, canvas, text } = cardData;
+      //Modify Mode
       if (editMode && reviewCards && currentCard.id) {
         const url = ENDPOINTS.CARDS.UPDATE_CARD.endpoint(deckname);
         authFetch(url, {
@@ -79,6 +82,33 @@ export const CardControls = () => {
     }
   };
 
+  const removeCardFromDeck = () => {
+    const url = ENDPOINTS.CARDS.REMOVE_CARD.endpoint(param.deckname);
+    const method = ENDPOINTS.CARDS.REMOVE_CARD.method;
+    debugger;
+    authFetch(url, {
+      method,
+      headers: HEADERS,
+      body: JSON.stringify({
+        id: currentCard.id,
+      }),
+    })
+      .then((response) => {
+        if (response.status == 400) {
+          setError("Bad Request sent 400");
+        } else if (response.status == 200 || response.status == 201) {
+          const replaceCardsFromSelectedDeck = cardsFromSelectedDeck.filter(
+            (each) => each.id != currentCard.id
+          );
+          setCardsFromSelectedDeck(replaceCardsFromSelectedDeck);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        setError("Delete Card API call failed.");
+      });
+  };
+
   const replaceCardInDeck = () => {
     const replaceCardsFromSelectedDeck = cardsFromSelectedDeck.map((each) => {
       if (each.id == currentCard.id) {
@@ -106,7 +136,7 @@ export const CardControls = () => {
         className="control_btn"
         onClick={() => setFlipCard((prev) => !prev)}
       >
-        Flip the Card
+        Flip Card
       </button>
 
       {editMode && (
@@ -114,7 +144,12 @@ export const CardControls = () => {
           {editMode && reviewCards ? "Modify Card" : "Add Card"}
         </button>
       )}
-      {editMode && (
+      {editMode && reviewCards && (
+        <button className="control_btn" onClick={() => removeCardFromDeck()}>
+          Remove Card
+        </button>
+      )}
+      {editMode && reviewCards && (
         <button className="control_btn" onClick={() => resetCardData()}>
           Reset
         </button>

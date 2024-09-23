@@ -15,15 +15,9 @@ export const CreateFlashCard = () => {
   useEffect(() => {
     setEditMode(true);
     setPageInfo({
-      header: `Create your cards for ${deckname}`,
+      header: `Create your cards for the Deck : ${param.deckname}`,
       info: `Write a question in the front and answer to learn in the back | you can also use the canvas to draw`,
     });
-    return () => {
-      setPageInfo({
-        header: "Welcome to Active Recall",
-        info: ``,
-      });
-    };
   }, []);
 
   useEffect(() => {
