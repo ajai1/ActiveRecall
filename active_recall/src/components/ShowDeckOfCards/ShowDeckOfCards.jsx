@@ -5,7 +5,7 @@ import { CardContext } from "../../contexts/card-context";
 import { useAuthFetch } from "../../hooks/authorization";
 
 import DeleteIcon from "../../static/icons/delete.png";
-import EditIcon from "../../static/icons/edit.png";
+import EditIcon from "../../static/icons/pencil.png";
 import { DeckEdit } from "./DeckEdit";
 import { AppContext } from "../../contexts/app-context";
 
