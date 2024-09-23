@@ -34,11 +34,6 @@ export const SignUp = () => {
     } else {
       setError("");
       createUser();
-      addToast(
-        `${formData.username} Registered`,
-        "user successfully registed, please sign in to continue",
-        "success"
-      );
       console.log("Form Data Submitted:", formData);
     }
   };
@@ -55,9 +50,20 @@ export const SignUp = () => {
         }),
       });
       const json = await response.json();
+      addToast(
+        `${formData.username} Registered`,
+        "user successfully registed, please sign in to continue",
+        "success"
+      );
       console.log("USER CREATED !!!");
       navigate("/signin");
-    } catch (error) {}
+    } catch (error) {
+      addToast(
+        `Not Registered`,
+        "Something went wrong, please refresh/relaunch app",
+        "error"
+      );
+    }
   };
 
   return (

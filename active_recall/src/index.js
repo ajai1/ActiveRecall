@@ -8,11 +8,13 @@ import ErrorBoundary from "./components/ErrorBoundary";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <ErrorBoundary fallback="Error">
-    <UserProvider>
-      <App />
-    </UserProvider>
-  </ErrorBoundary>
+  <React.StrictMode>
+    <ErrorBoundary fallback="Error">
+      <UserProvider>
+        <App />
+      </UserProvider>
+    </ErrorBoundary>
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
