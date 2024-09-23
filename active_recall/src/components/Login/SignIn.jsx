@@ -47,12 +47,19 @@ export const SignIn = () => {
       });
       const json = await response.text();
       console.log("json is ", json, response.status);
-      if (json == "User successfully signed in !!!" || response.status == 202) {
-        setUserCreds(encode(`${formData.username}:${formData.password}`));
-        setError("");
-        navigate("/");
+      if (response.status == 401) {
+        setError("User ID and Password are not matching");
       } else {
-        setError(json);
+        if (
+          json == "User successfully signed in !!!" ||
+          response.status == 202
+        ) {
+          setUserCreds(encode(`${formData.username}:${formData.password}`));
+          setError("");
+          navigate("/");
+        } else {
+          setError(json);
+        }
       }
     } catch (error) {
       setError("something went wrong");
