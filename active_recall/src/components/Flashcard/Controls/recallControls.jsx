@@ -4,6 +4,7 @@ import { recallChanges, shuffle } from "../../../utils/Utilities";
 import { ENDPOINTS, HEADERS } from "../../../constants/apiConstants";
 import { CardContext } from "../../../contexts/card-context";
 import { useAuthFetch } from "../../../hooks/authorization";
+import { AppContext } from "../../../contexts/app-context";
 
 export const RecallControls = () => {
   const {
@@ -15,9 +16,11 @@ export const RecallControls = () => {
     setError,
   } = useContext(CardContext);
 
+  const { addToast } = useContext(AppContext);
+
   const authFetch = useAuthFetch();
 
-  const recallAPICall = (cardRecallToModify) => {
+  const recallAPICall = (cardRecallToModify, feedback) => {
     console.log("RECALL OPTION SELECTED ", cardRecallToModify);
     const url = ENDPOINTS.CARDS.UPDATE_CARD.endpoint(deckname);
     authFetch(url, {
@@ -25,10 +28,7 @@ export const RecallControls = () => {
       headers: HEADERS,
       body: JSON.stringify(cardRecallToModify),
     })
-      .then((res) => res.json())
-      .then((json) => {
-        //console.log("Updated the card ", json);
-      })
+      .then((res) => {})
       .catch((error) => {
         console.log(error);
         setError("Create Card API call failed.");
@@ -61,7 +61,15 @@ export const RecallControls = () => {
     const updateCards = [...cardsFromSelectedDeck];
     const indexToUpdate = updateCards.findIndex((ecard) => ecard.id == card.id);
     updateCards[indexToUpdate] = { ...card };
-    recallAPICall(card);
+    let typeOfToast = "success";
+    if (feedback == "little confusing") typeOfToast = "warn";
+    else if (feedback == "don't know") typeOfToast = "error";
+    addToast(
+      `${card.header} - ${feedback}`,
+      `Moving to next card`,
+      typeOfToast
+    );
+    recallAPICall(card, feedback);
     setCardsFromSelectedDeck(updateCards);
     return card;
   };

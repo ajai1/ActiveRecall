@@ -7,7 +7,7 @@ import { AppContext } from "../../contexts/app-context";
 
 export const CreateNewDeck = () => {
   const { setDeckname, setEditMode, setError } = useContext(CardContext);
-  const { setPageInfo } = useContext(AppContext);
+  const { setPageInfo, addToast } = useContext(AppContext);
   const navigate = useNavigate();
 
   const authFetch = useAuthFetch();
@@ -23,7 +23,7 @@ export const CreateNewDeck = () => {
     e.preventDefault();
     const deckNameValue = e.target.elements.deckNameInput.value;
     if (deckNameValue.length == 0) {
-      alert("Enter a name");
+      addToast("Deck Name empty", "Please enter a deck name", "warn");
       return;
     }
     const url = ENDPOINTS.DECKS.CREATE_DECK.endpoint();
@@ -37,6 +37,11 @@ export const CreateNewDeck = () => {
       .then((response) => {
         setDeckname(deckNameValue);
         setEditMode(true);
+        addToast(
+          `Created ${deckNameValue}`,
+          "Deck Created successfully",
+          "success"
+        );
         navigate(`/create/${deckNameValue}`);
       })
       .catch((error) => {

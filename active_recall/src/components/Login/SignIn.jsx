@@ -3,10 +3,13 @@ import { encode } from "base-64";
 import { ENDPOINTS, HEADERS } from "../../constants/apiConstants";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../contexts/user-context";
+import { AppContext } from "../../contexts/app-context";
 
 export const SignIn = () => {
   const navigate = useNavigate();
   const { userCreds, setUserCreds } = useContext(UserContext);
+
+  const { addToast } = useContext(AppContext);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -56,6 +59,11 @@ export const SignIn = () => {
         ) {
           setUserCreds(encode(`${formData.username}:${formData.password}`));
           setError("");
+          addToast(
+            `${formData.username} all set`,
+            "user successfully signed in",
+            "success"
+          );
           navigate("/");
         } else {
           setError(json);

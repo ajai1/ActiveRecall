@@ -98,7 +98,6 @@ export const CardContextProvider = ({ children }) => {
       resetCardsIntervalAndRepetitions();
     } else {
       const shuffleCards = shuffle(cardsWithMinInterval);
-      console.log("Shuffled Cards ", shuffleCards);
       const nextCard = shuffleCards[0];
       setCurrentCard(nextCard);
     }
@@ -115,7 +114,6 @@ export const CardContextProvider = ({ children }) => {
       })
         .then((response) => {
           setReviewCards(true);
-          console.log("REFETCH DATA ", response);
         })
         .catch((error) => {
           console.log(error);
@@ -231,7 +229,6 @@ export const CardContextProvider = ({ children }) => {
   }, [currentCard]);
 
   useEffect(() => {
-    console.log("CARDS FROM DECK ", shouldShuffle);
     if (cardsFromSelectedDeck && cardsFromSelectedDeck.length > 0) {
       if (shouldShuffle) showNextCard();
       else {

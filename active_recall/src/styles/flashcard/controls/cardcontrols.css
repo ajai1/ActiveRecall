@@ -1,6 +1,6 @@
 .card_control_container {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   margin-top: 30px;
 }
 

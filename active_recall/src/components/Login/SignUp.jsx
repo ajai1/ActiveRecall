@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import "../../styles/login.css";
 import { ENDPOINTS, HEADERS } from "../../constants/apiConstants";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../../contexts/app-context";
 
 export const SignUp = () => {
   const navigate = useNavigate();
+
+  const { addToast } = useContext(AppContext);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -31,6 +34,11 @@ export const SignUp = () => {
     } else {
       setError("");
       createUser();
+      addToast(
+        `${formData.username} Registered`,
+        "user successfully registed, please sign in to continue",
+        "success"
+      );
       console.log("Form Data Submitted:", formData);
     }
   };

@@ -2,15 +2,13 @@ import React, { useContext } from "react";
 
 import "../../../styles/flashcard/controls/cardcontrols.css";
 
-import FlipIcon from "../../../static/icons/flip.png";
-import AddCardIcon from "../../../static/icons/addcard.png";
 import { ENDPOINTS, HEADERS } from "../../../constants/apiConstants";
 import { getCardData } from "../../../utils/CardUtils";
 import { CardContext } from "../../../contexts/card-context";
 import { useAuthFetch } from "../../../hooks/authorization";
 
-import ResetIcon from "../../../static/icons/reset.png";
 import { useParams } from "react-router-dom";
+import { AppContext } from "../../../contexts/app-context";
 
 export const CardControls = () => {
   const authFetch = useAuthFetch();
@@ -29,6 +27,8 @@ export const CardControls = () => {
     setCurrentCard,
     setError,
   } = useContext(CardContext);
+
+  const { addToast } = useContext(AppContext);
 
   //API call
   const addCardToTheDeck = () => {
@@ -55,7 +55,11 @@ export const CardControls = () => {
           }),
         })
           .then((response) => {
-            console.log("Updated");
+            addToast(
+              `Updated ${currentCard.header}`,
+              "Card updated",
+              "success"
+            );
             replaceCardInDeck();
           })
           .catch((error) => {
@@ -70,6 +74,11 @@ export const CardControls = () => {
           body: JSON.stringify(cardData),
         })
           .then((response) => {
+            addToast(
+              `${cardData.header}`,
+              "Card added successfully, please add the next card",
+              "success"
+            );
             resetTheCard();
           })
           .catch((error) => {
@@ -78,14 +87,13 @@ export const CardControls = () => {
           });
       }
     } else {
-      alert("Add a Header to the Card");
+      addToast("Header Missing", "Card should have a header", "warn");
     }
   };
 
   const removeCardFromDeck = () => {
     const url = ENDPOINTS.CARDS.REMOVE_CARD.endpoint(param.deckname);
     const method = ENDPOINTS.CARDS.REMOVE_CARD.method;
-    debugger;
     authFetch(url, {
       method,
       headers: HEADERS,
@@ -95,12 +103,17 @@ export const CardControls = () => {
     })
       .then((response) => {
         if (response.status == 400) {
-          setError("Bad Request sent 400");
+          addToast(`Bad Request`, "Card was not removed", "error");
         } else if (response.status == 200 || response.status == 201) {
           const replaceCardsFromSelectedDeck = cardsFromSelectedDeck.filter(
             (each) => each.id != currentCard.id
           );
           setCardsFromSelectedDeck(replaceCardsFromSelectedDeck);
+          addToast(
+            `${currentCard.header}`,
+            "Card removed successfully",
+            "success"
+          );
         }
       })
       .catch((error) => {
@@ -124,6 +137,11 @@ export const CardControls = () => {
       (eachcard) => eachcard.id == currentCard.id
     );
     setCurrentCard(oldData);
+    addToast(
+      `Reseted ${currentCard.header}`,
+      "Card has been reseted to previous state",
+      "success"
+    );
   };
 
   return (

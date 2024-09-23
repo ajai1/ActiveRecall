@@ -121,7 +121,7 @@ export const DeckEdit = () => {
         <div className="edit_deck_name_container">
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <h3>{currentEditDeck.deckname}</h3>
+              <h3>Current Deck "{currentEditDeck.deckname}"</h3>
               <label htmlFor="newdeckname">Change deck name</label>
               <input
                 type="text"

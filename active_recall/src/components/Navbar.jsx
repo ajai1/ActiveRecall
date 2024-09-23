@@ -6,10 +6,12 @@ import { CardContext } from "../contexts/card-context";
 import { UserContext } from "../contexts/user-context";
 import { useAuthFetch } from "../hooks/authorization";
 import { ENDPOINTS, HEADERS } from "../constants/apiConstants";
+import { AppContext } from "../contexts/app-context";
 
 export const Navbar = () => {
   const { setEditMode, setCanvasMode, setError } = useContext(CardContext);
   const { userCreds, setUserCreds } = useContext(UserContext);
+  const { addToast } = useContext(AppContext);
 
   const navigate = useNavigate();
 
@@ -26,6 +28,7 @@ export const Navbar = () => {
         setEditMode(false);
         setCanvasMode(false);
         setUserCreds(null);
+        addToast(`User signed out`, "Please login to continue", "warn");
         navigate("/signin");
       })
       .catch((error) => {

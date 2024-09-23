@@ -5,9 +5,10 @@ import { Outlet, useLocation } from "react-router-dom";
 import "../styles/rootcomponent.css";
 import { CardContextProvider } from "../contexts/card-context";
 import { AppContext } from "../contexts/app-context";
+import { Toast } from "./Toast";
 
 export const RootComponent = () => {
-  const { pageInfo, setPageInfo } = useContext(AppContext);
+  const { pageInfo, setPageInfo, toasts } = useContext(AppContext);
 
   const location = useLocation();
 
@@ -41,6 +42,7 @@ export const RootComponent = () => {
         <div className="grid_item">
           <Outlet />
         </div>
+        {toasts && <Toast></Toast>}
       </div>
     </CardContextProvider>
   );
