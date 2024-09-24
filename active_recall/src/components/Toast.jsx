@@ -11,7 +11,7 @@ export const Toast = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       removeToast(id);
-    }, 3000);
+    }, 4000);
     return () => {
       clearTimeout(timer);
     };

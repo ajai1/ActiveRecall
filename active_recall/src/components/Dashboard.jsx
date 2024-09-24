@@ -29,6 +29,7 @@ export const Dashboard = () => {
         <div>
           <h3>This is a dev-in-progress application.</h3>
           <p>Intition is to create an app similar to Memrise or Anki</p>
+          <p>Free hosting service used, please expect delay in response</p>
         </div>
         <div>
           <ul>

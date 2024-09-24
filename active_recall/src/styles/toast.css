@@ -1,12 +1,23 @@
 .toast_container {
   position: absolute;
   bottom: 2rem;
-  right: 0;
+  right: -200px;
   display: flex;
   flex-direction: column;
   background-color: white;
   box-shadow: 1px 2px 5px black;
   padding: 0.3rem 1rem;
+
+  animation: slide-in 0.3s forwards;
+}
+
+@keyframes slide-in {
+  0% {
+    right: -200px;
+  }
+  100% {
+    right: 0;
+  }
 }
 
 .toast_text_container {

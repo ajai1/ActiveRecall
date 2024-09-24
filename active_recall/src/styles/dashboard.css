@@ -20,6 +20,18 @@
   box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.584);
 }
 
+.dashboard_text_block ul {
+  text-align: left;
+}
+
+.dashboard_text_block h3 {
+  margin: 0;
+}
+
+.dashboard_text_block p {
+  margin: 0;
+}
+
 .card_section {
   display: flex;
   justify-content: center;
@@ -171,4 +183,10 @@ header > h1 {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  box-shadow: 0 6px 5px #585656;
+}
+
+#deckNameSubmit:active {
+  box-shadow: 0 3px 2px #323131;
+  transform: translateY(4px);
 }
