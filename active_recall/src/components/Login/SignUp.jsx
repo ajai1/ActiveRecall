@@ -28,7 +28,6 @@ export const SignUp = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Simple validation for matching passwords
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
     } else {
