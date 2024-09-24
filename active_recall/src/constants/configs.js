@@ -3,5 +3,6 @@ export const DB = true;
 
 export const CONFIG = {
   LOCAL_BASE: "http://localhost:8080",
-  BASE: "https://activerecallapi.onrender.com",
+  BASE2: "https://activerecallapi.onrender.com",
+  BASE: "https://activerecallapi-production.up.railway.app",
 };
