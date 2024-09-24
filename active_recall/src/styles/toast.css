@@ -1,7 +1,7 @@
 .toast_container {
   position: absolute;
-  bottom: 2rem;
-  right: -200px;
+  right: 0;
+  bottom: -200px;
   display: flex;
   flex-direction: column;
   background-color: white;
@@ -13,10 +13,10 @@
 
 @keyframes slide-in {
   0% {
-    right: -200px;
+    bottom: -200px;
   }
   100% {
-    right: 0;
+    bottom: 0;
   }
 }
 

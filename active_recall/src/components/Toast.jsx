@@ -11,7 +11,7 @@ export const Toast = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       removeToast(id);
-    }, 4000);
+    }, 3000);
     return () => {
       clearTimeout(timer);
     };
@@ -30,7 +30,7 @@ export const Toast = () => {
   };
 
   return (
-    <>
+    <div>
       <div key={id} className="toast_container">
         <div className="toast_text_container">
           <p className={`toast_header ${getToastStyles(type)}`}>{header}</p>
@@ -40,6 +40,6 @@ export const Toast = () => {
           <img src={DeleteIcon} width={"25rem"} />
         </div>
       </div>
-    </>
+    </div>
   );
 };

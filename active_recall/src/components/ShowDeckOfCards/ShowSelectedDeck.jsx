@@ -35,7 +35,7 @@ export const ShowSelectedDeck = ({ dontShowControls }) => {
     resetTheCard,
   } = useContext(CardContext);
 
-  const { setPageInfo } = useContext(AppContext);
+  const { setPageInfo, setLoading } = useContext(AppContext);
 
   const param = useParams();
   const authFetch = useAuthFetch();
@@ -49,6 +49,14 @@ export const ShowSelectedDeck = ({ dontShowControls }) => {
   }, [currentCard, cardsFromSelectedDeck]);
 
   useEffect(() => {
+    if (timerDone && !dontShowControls) {
+      setReviewCards(false);
+      setEditMode(false);
+      setTimerDone(false);
+    }
+  }, [timerDone]);
+
+  useEffect(() => {
     if (!dontShowControls) {
       setPageInfo({
         header: "Active Recall Session",
@@ -58,6 +66,14 @@ export const ShowSelectedDeck = ({ dontShowControls }) => {
     if (reviewCards == false && editMode == false && timerDone == false) {
       fetchDeckAndCards(param.deckname);
     }
+    console.log(
+      reviewCards,
+      "REVIEW CARDS",
+      editMode,
+      "editMode",
+      timerDone,
+      "timerDone"
+    );
   }, [param.deckname, timerDone, reviewCards]);
 
   const checkCurrentCardIndexAndDisableControls = () => {
@@ -79,36 +95,39 @@ export const ShowSelectedDeck = ({ dontShowControls }) => {
   };
 
   const fetchDeckAndCards = async (deckname) => {
-    try {
-      const deckUrl = ENDPOINTS.DECKS.GET_DECK_BY_NAME.endpoint(deckname);
-      const deckMethod = ENDPOINTS.DECKS.GET_DECK_BY_NAME.method;
-      const deckResponse = await authFetch(deckUrl, { deckMethod });
-      const deckData = await deckResponse.json();
-      if (deckData.paused) {
-        setReviewCards(true);
+    setLoading(true);
+    if (dontShowControls) {
+      try {
+        const deckUrl = ENDPOINTS.DECKS.GET_DECK_BY_NAME.endpoint(deckname);
+        const deckMethod = ENDPOINTS.DECKS.GET_DECK_BY_NAME.method;
+        const deckResponse = await authFetch(deckUrl, { deckMethod });
+        const deckData = await deckResponse.json();
+        if (deckData.paused) {
+          setReviewCards(true);
+        }
+      } catch (error) {
+        console.log(error);
+        setError(`Get Deck API call failed.`);
       }
-    } catch (error) {
-      console.log(error);
-      setError(`Get Deck API call failed.`);
     }
     try {
       const cardsUrl = ENDPOINTS.CARDS.GET_CARDS_FROM_DECK.endpoint(deckname);
       const cardsMethod = ENDPOINTS.CARDS.GET_CARDS_FROM_DECK.method;
       const cardsResponse = await authFetch(cardsUrl, { cardsMethod });
       const cardsData = await cardsResponse.json();
-      console.log("cardsData  --- ", cardsData);
       setCardsFromSelectedDeck(cardsData);
       setDeckname(param.deckname);
       setEditMode(false);
       setCurrentCardId(0);
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
       setError(`Get Cards from Deck API call failed.`);
     }
   };
 
   const setCardFromIndex = (index) => {
-    console.log("CURRENT");
     setCurrentCard(cardsFromSelectedDeck[index]);
   };
 
@@ -142,7 +161,7 @@ export const ShowSelectedDeck = ({ dontShowControls }) => {
   };
 
   return (
-    <div className="deck_card_container">
+    <div className="deck_card_container" style={{ marginTop: "1rem" }}>
       <div className="deck_card">
         <div
           className={`deck_navigate_control`}
@@ -170,6 +189,11 @@ export const ShowSelectedDeck = ({ dontShowControls }) => {
         <section className="card_controls">
           <CardControls deckname={deckname}></CardControls>
         </section>
+        {reviewCards == true && dontShowControls == false && (
+          <h3>
+            You have completed one session, you can re try after 60 seconds
+          </h3>
+        )}
         {timerDone == true && dontShowControls == false && (
           <button
             className="try_again"

@@ -50,7 +50,6 @@ export const SignIn = () => {
         }),
       });
       const json = await response.text();
-      console.log("json is ", json, response.status);
       setLoading(false);
       if (response.status == 401) {
         setError("User ID and Password are not matching");

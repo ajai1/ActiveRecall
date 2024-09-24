@@ -24,7 +24,6 @@ export const Navbar = () => {
       headers: HEADERS,
     })
       .then((response) => {
-        console.log("LOGGED OUT");
         setEditMode(false);
         setCanvasMode(false);
         setUserCreds(null);

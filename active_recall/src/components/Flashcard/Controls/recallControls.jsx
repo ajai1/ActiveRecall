@@ -20,8 +20,7 @@ export const RecallControls = () => {
 
   const authFetch = useAuthFetch();
 
-  const recallAPICall = (cardRecallToModify, feedback) => {
-    console.log("RECALL OPTION SELECTED ", cardRecallToModify);
+  const recallAPICall = (cardRecallToModify) => {
     const url = ENDPOINTS.CARDS.UPDATE_CARD.endpoint(deckname);
     authFetch(url, {
       method: ENDPOINTS.CARDS.UPDATE_CARD.method,

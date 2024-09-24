@@ -24,6 +24,7 @@ export const ShowDeckOfCards = () => {
     setShouldShuffle,
     setTimerDone,
     setError,
+    resetTheCard,
   } = useContext(CardContext);
 
   const { setPageInfo, setLoading } = useContext(AppContext);
@@ -32,6 +33,7 @@ export const ShowDeckOfCards = () => {
 
   //Select the deck and store cards
   useEffect(() => {
+    resetTheCard();
     async function getDeckForUser() {
       try {
         const url = ENDPOINTS.DECKS.GET_ALL_DECKS.endpoint();
@@ -65,6 +67,11 @@ export const ShowDeckOfCards = () => {
   }
 
   const handleDeckNameSelect = (deck) => {
+    setTimerDone(false);
+    setEditMode(false);
+    setReviewCards(false);
+    navigate(`/deck-of-cards/${deck.deckname}`);
+    return;
     setLoading(true);
     fetchCardsFromDeck(deck.deckname)
       .then((data) => {
@@ -108,7 +115,6 @@ export const ShowDeckOfCards = () => {
       .catch((error) => {
         console.log(error);
         setLoading(false);
-
         setError(`Remove Deck API call failed.`);
       });
   };
@@ -116,8 +122,9 @@ export const ShowDeckOfCards = () => {
   const editThisDeck = (deck, event) => {
     setLoading(true);
     event.stopPropagation();
-    console.log("SELECTED DECK - deck", deck);
-    fetchCardsFromDeck(deck.deckname)
+    navigate(`/deck-of-cards/edit/${deck.deckname}`);
+    return;
+    /*     fetchCardsFromDeck(deck.deckname)
       .then((data) => {
         setCardsFromSelectedDeck(data);
         setDeckname(deck.deckname);
@@ -132,7 +139,7 @@ export const ShowDeckOfCards = () => {
         console.log(error);
         setLoading(false);
         setError(`Modify Deck API call failed.`);
-      });
+      }); */
   };
 
   return (

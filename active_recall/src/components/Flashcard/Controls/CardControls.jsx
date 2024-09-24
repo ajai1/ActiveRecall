@@ -26,9 +26,11 @@ export const CardControls = () => {
     setCardsFromSelectedDeck,
     setCurrentCard,
     setError,
+    setEraserSelected,
+    setCanvasMode,
   } = useContext(CardContext);
 
-  const { addToast } = useContext(AppContext);
+  const { addToast, setLoading } = useContext(AppContext);
 
   //API call
   const addCardToTheDeck = () => {
@@ -43,6 +45,7 @@ export const CardControls = () => {
       //Modify Mode
       if (editMode && reviewCards && currentCard.id) {
         const url = ENDPOINTS.CARDS.UPDATE_CARD.endpoint(deckname);
+        setLoading(true);
         authFetch(url, {
           method: ENDPOINTS.CARDS.UPDATE_CARD.method,
           headers: HEADERS,
@@ -60,14 +63,20 @@ export const CardControls = () => {
               "Card updated",
               "success"
             );
+            setFlipCard(false);
+            setEraserSelected(false);
+            setCanvasMode(false);
+            setLoading(false);
             replaceCardInDeck();
           })
           .catch((error) => {
             console.log(error);
+            setLoading(false);
             setError("Update Card API call failed.");
           });
       } else {
         const url = ENDPOINTS.CARDS.CREATE_CARD.endpoint(deckname);
+        setLoading(true);
         authFetch(url, {
           method: ENDPOINTS.CARDS.CREATE_CARD.method,
           headers: HEADERS,
@@ -79,10 +88,12 @@ export const CardControls = () => {
               "Card added successfully, please add the next card",
               "success"
             );
+            setLoading(false);
             resetTheCard();
           })
           .catch((error) => {
             console.log(error);
+            setLoading(false);
             setError("Create Card API call failed.");
           });
       }

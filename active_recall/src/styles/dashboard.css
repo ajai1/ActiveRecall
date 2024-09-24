@@ -7,6 +7,7 @@
   height: 200px;
   background-color: #708871;
   margin-bottom: 10px;
+  cursor: pointer;
 }
 
 .dashboard_navs:hover {
@@ -189,4 +190,9 @@ header > h1 {
 #deckNameSubmit:active {
   box-shadow: 0 3px 2px #323131;
   transform: translateY(4px);
+}
+
+.root_container {
+  position: relative;
+  height: 100vh;
 }

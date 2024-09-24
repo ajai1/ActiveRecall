@@ -22,7 +22,7 @@ export const DeckEdit = () => {
     setTimerDone,
     setError,
     setCurrentCardId,
-    addCardsSelectedFromDeck,
+    resetTheCard,
   } = useContext(CardContext);
 
   const { setPageInfo, setLoading } = useContext(AppContext);
@@ -76,7 +76,6 @@ export const DeckEdit = () => {
     })
       .then((res) => {
         setLoading(false);
-        console.log("Update done = ", res);
         setCurrentEditDeck({ ...newDeck });
       })
       .catch((error) => {
@@ -89,13 +88,15 @@ export const DeckEdit = () => {
   useEffect(() => {
     if (params.deckname) {
       setLoading(true);
+      setShouldShuffle(false);
+      setEditMode(true);
+      setReviewCards(true);
       fetchDeckAndCards(params.deckname)
         .then(() => {
           setShouldShuffle(false);
           setDeckname(params.deckname);
           setEditMode(true);
           setReviewCards(true);
-          console.log("SETTED ALL CARDS AND SHUFFLE TO FALSE");
           setLoading(false);
         })
         .catch((error) => {
@@ -112,9 +113,11 @@ export const DeckEdit = () => {
       info: "You can edit the deck name, or edit cards or add new cards to the deck",
     });
     return () => {
+      resetTheCard();
       setReviewCards(false);
       setEditMode(false);
       setFlipCard(false);
+      setCardsFromSelectedDeck(null);
       setShouldShuffle(true);
       setTimerDone(false);
       setCurrentCardId(0);
@@ -127,8 +130,9 @@ export const DeckEdit = () => {
         <div className="edit_deck_name_container">
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <h3>Current Deck "{currentEditDeck.deckname}"</h3>
-              <label htmlFor="newdeckname">Change deck name</label>
+              <label htmlFor="newdeckname">
+                Current deck name is "{currentEditDeck.deckname}"
+              </label>
               <input
                 type="text"
                 id="newdeckname"
@@ -136,6 +140,7 @@ export const DeckEdit = () => {
                 value={newDeckName}
                 onChange={handleChange}
                 required
+                placeholder="you can rename the current deck"
                 autoComplete={"off"}
               />
             </div>
@@ -154,7 +159,7 @@ export const DeckEdit = () => {
         <button
           className="control_btn"
           onClick={() => {
-            console.log("GOING TO deckname ", currentEditDeck.deckname);
+            setReviewCards(false);
             navigate(`/create/${currentEditDeck.deckname}`);
           }}
         >

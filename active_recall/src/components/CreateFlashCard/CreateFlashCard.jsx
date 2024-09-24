@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { CardControls } from "../Flashcard/Controls/CardControls";
 import { Card } from "../Flashcard/Card";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { CardContext } from "../../contexts/card-context";
 import { AppContext } from "../../contexts/app-context";
 
@@ -12,6 +12,14 @@ export const CreateFlashCard = () => {
   const { setPageInfo } = useContext(AppContext);
   const param = useParams();
 
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname.startsWith("/create/")) {
+      resetTheCard();
+    }
+  }, [location]);
+
   useEffect(() => {
     setEditMode(true);
     setPageInfo({
@@ -20,18 +28,13 @@ export const CreateFlashCard = () => {
     });
   }, []);
 
-  useEffect(() => {
-    setDeckname(param.deckname);
-    resetTheCard();
-  }, [param.deckname]);
-
   return (
     <div className="card_create_container">
       <section className="card_section">
-        <Card deckname={deckname} />
+        <Card />
       </section>
       <section className="card_controls">
-        <CardControls deckname={deckname}></CardControls>
+        <CardControls></CardControls>
       </section>
     </div>
   );

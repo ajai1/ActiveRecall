@@ -77,6 +77,8 @@ export const CardContextProvider = ({ children }) => {
     setFlipCard(false);
     setCardRecallState(1);
     setClearCanvas(true);
+    setEraserSelected(false);
+    setCanvasMode(false);
   };
 
   const showNextCard = () => {

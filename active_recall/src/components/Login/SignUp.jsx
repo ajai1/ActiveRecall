@@ -33,7 +33,6 @@ export const SignUp = () => {
     } else {
       setError("");
       createUser();
-      console.log("Form Data Submitted:", formData);
     }
   };
 

@@ -8,7 +8,6 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, info) {
-    console.log("RECEIVED ERRORRRR !!!!");
     console.log(error, info);
   }
 

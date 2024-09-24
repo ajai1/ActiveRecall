@@ -8,7 +8,6 @@ export const ErrorPage = () => {
 
   useEffect(() => {
     return () => {
-      console.log("Clearing Error");
       setError(null);
     };
   }, []);

@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import "../../styles/flashcard/flashcard.css";
 import { CardContext } from "../../contexts/card-context";
 
-export const CardFront = ({ card }) => {
+export const CardFront = () => {
   const { editMode, currentCard, setCurrentCard } = useContext(CardContext);
 
   const handleCardFrontChanges = (type, value) => {
@@ -14,13 +14,15 @@ export const CardFront = ({ card }) => {
     }
   };
 
+  useEffect(() => {}, [currentCard]);
+
   return (
     <>
       <>
         <input
           style={{ textAlign: "center" }}
           className="flashcard_header"
-          value={card ? card.header : currentCard ? currentCard.header : ""}
+          value={currentCard ? currentCard.header : ""}
           onChange={(event) =>
             handleCardFrontChanges("header", event.target.value)
           }
@@ -32,13 +34,7 @@ export const CardFront = ({ card }) => {
         <textarea
           className="flashcard_textarea"
           placeholder={editMode ? "Enter the content" : ""}
-          value={
-            card
-              ? card.briefstatement
-              : currentCard
-              ? currentCard.briefstatement
-              : ""
-          }
+          value={currentCard ? currentCard.briefstatement : ""}
           onChange={(event) =>
             handleCardFrontChanges("briefstatement", event.target.value)
           }
