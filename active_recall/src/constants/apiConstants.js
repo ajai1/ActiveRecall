@@ -15,63 +15,63 @@ export const ENDPOINTS = {
   USERS: {
     CREATE_USER: {
       method: REQUEST_METHODS.POST,
-      endpoint: () => `${CONFIG.LOCAL_BASE}/users`,
+      endpoint: () => `${CONFIG.BASE}/users`,
     },
     SIGNIN: {
       method: REQUEST_METHODS.POST,
-      endpoint: () => `${CONFIG.LOCAL_BASE}/users/signin`,
+      endpoint: () => `${CONFIG.BASE}/users/signin`,
     },
     SIGNOUT: {
       method: REQUEST_METHODS.POST,
-      endpoint: () => `${CONFIG.LOCAL_BASE}/logout`,
+      endpoint: () => `${CONFIG.BASE}/logout`,
     },
   },
   DECKS: {
     GET_ALL_DECKS: {
       method: REQUEST_METHODS.GET,
-      endpoint: () => `${CONFIG.LOCAL_BASE}/decks`,
+      endpoint: () => `${CONFIG.BASE}/decks`,
     },
     CREATE_DECK: {
       method: REQUEST_METHODS.POST,
-      endpoint: () => `${CONFIG.LOCAL_BASE}/decks`,
+      endpoint: () => `${CONFIG.BASE}/decks`,
     },
     GET_DECK_BY_NAME: {
       method: REQUEST_METHODS.GET,
-      endpoint: (deckname) => `${CONFIG.LOCAL_BASE}/decks/${deckname}`,
+      endpoint: (deckname) => `${CONFIG.BASE}/decks/${deckname}`,
     },
     FIND_DECK_BY_ID: {
       method: REQUEST_METHODS.GET,
-      endpoint: (deckid) => `${CONFIG.LOCAL_BASE}/decks/find/${deckid}`,
+      endpoint: (deckid) => `${CONFIG.BASE}/decks/find/${deckid}`,
     },
     RESET_CARDS_INTERVAL_REPETITION: {
       method: REQUEST_METHODS.POST,
-      endpoint: () => `${CONFIG.LOCAL_BASE}/schedule`,
+      endpoint: () => `${CONFIG.BASE}/schedule`,
     },
     DELETE_DECK_BY_ID: {
       method: REQUEST_METHODS.DELETE,
-      endpoint: () => `${CONFIG.LOCAL_BASE}/decks`,
+      endpoint: () => `${CONFIG.BASE}/decks`,
     },
     UPDATE_DECK_BY_ID: {
       method: REQUEST_METHODS.PUT,
-      endpoint: () => `${CONFIG.LOCAL_BASE}/decks`,
+      endpoint: () => `${CONFIG.BASE}/decks`,
     },
   },
   CARDS: {
     GET_CARDS_FROM_DECK: {
       method: REQUEST_METHODS.GET,
-      endpoint: (deckname) => `${CONFIG.LOCAL_BASE}/cards/${deckname}`,
+      endpoint: (deckname) => `${CONFIG.BASE}/cards/${deckname}`,
     },
     CREATE_CARD: {
       method: REQUEST_METHODS.POST,
-      endpoint: (deckname) => `${CONFIG.LOCAL_BASE}/cards/${deckname}`,
+      endpoint: (deckname) => `${CONFIG.BASE}/cards/${deckname}`,
     },
     UPDATE_CARD: {
       method: REQUEST_METHODS.PUT,
-      endpoint: (deckname) => `${CONFIG.LOCAL_BASE}/cards/${deckname}`,
+      endpoint: (deckname) => `${CONFIG.BASE}/cards/${deckname}`,
     },
     REMOVE_CARD: {
       method: REQUEST_METHODS.DELETE,
-      endpoint: (deckname) => `${CONFIG.LOCAL_BASE}/cards/${deckname}`,
+      endpoint: (deckname) => `${CONFIG.BASE}/cards/${deckname}`,
     },
   },
 };
