@@ -1,12 +1,12 @@
 .grid_container {
   display: grid;
-  grid-template-rows: 15% 80% 5%;
+  grid-template-rows: 20% 80%;
   height: 100%;
 }
 
 @media (max-width: 412px) {
   .grid_container {
-    grid-template-rows: 15% 70% 5%;
+    grid-template-rows: 20% 80%;
   }
 }
 

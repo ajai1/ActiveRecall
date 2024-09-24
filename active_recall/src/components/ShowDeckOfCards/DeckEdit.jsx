@@ -155,7 +155,7 @@ export const DeckEdit = () => {
           <ShowSelectedDeck dontShowControls={true} />
         </div>
       )}
-      <div>
+      <div style={{ marginBottom: "1rem" }}>
         <button
           className="control_btn"
           onClick={() => {

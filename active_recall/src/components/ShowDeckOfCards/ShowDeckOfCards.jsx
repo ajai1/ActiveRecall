@@ -27,7 +27,7 @@ export const ShowDeckOfCards = () => {
     resetTheCard,
   } = useContext(CardContext);
 
-  const { setPageInfo, setLoading } = useContext(AppContext);
+  const { setPageInfo, setLoading, addToast } = useContext(AppContext);
 
   const authFetch = useAuthFetch();
 
@@ -107,7 +107,7 @@ export const ShowDeckOfCards = () => {
       .then((response) => {
         console.log("Deck Removed ", response);
         setLoading(false);
-
+        addToast("Deck Removed", "Deck along with cards removed", "warn");
         setAllDecks((prev) => {
           return prev.filter((each) => each.id != deckId);
         });

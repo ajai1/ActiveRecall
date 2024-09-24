@@ -49,12 +49,12 @@ export const RootComponent = () => {
         </div>
       )}
       <div className="root_container" style={{ overflow: "hidden" }}>
-        <div className="grid_container">
+        <div className="grid_container" style={{ overflow: "auto" }}>
           <header style={{ marginTop: "2rem" }} className="grid_item">
             <h1>{pageInfo.header}</h1>
             <p style={{ margin: "auto" }}>{pageInfo.info}</p>
           </header>
-          <div className="grid_item" style={{ marginTop: "1rem" }}>
+          <div className="grid_item" style={{ marginBottom: "1rem" }}>
             <Outlet />
           </div>
         </div>
