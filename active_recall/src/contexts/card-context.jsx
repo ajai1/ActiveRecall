@@ -44,6 +44,7 @@ export const CardContextProvider = ({ children }) => {
   const [timerDone, setTimerDone] = useState(false);
   const [shouldShuffle, setShouldShuffle] = useState(true);
   const [error, setError] = useState(null);
+  const [cardUpdatedOrAdded, setCardUpdatedOrAdded] = useState(false);
 
   const quillRef = useRef("");
   const textContent = useRef("");
@@ -173,6 +174,7 @@ export const CardContextProvider = ({ children }) => {
     timerDone,
     shouldShuffle,
     error,
+    cardUpdatedOrAdded,
   };
 
   const contextRefs = {
@@ -203,6 +205,7 @@ export const CardContextProvider = ({ children }) => {
     setDefaultHeaderInEditor,
     setShouldShuffle,
     setError,
+    setCardUpdatedOrAdded,
   };
 
   const ctxValue = {

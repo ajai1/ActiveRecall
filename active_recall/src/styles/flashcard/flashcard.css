@@ -166,3 +166,14 @@
   background-color: darkgray;
   color: white;
 }
+
+.success_lottie {
+  width: 5rem;
+  position: absolute;
+  z-index: 500;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}

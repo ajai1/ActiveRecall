@@ -28,6 +28,7 @@ export const CardControls = () => {
     setError,
     setEraserSelected,
     setCanvasMode,
+    setCardUpdatedOrAdded,
   } = useContext(CardContext);
 
   const { addToast, setLoading } = useContext(AppContext);
@@ -63,6 +64,7 @@ export const CardControls = () => {
               "Card updated",
               "success"
             );
+            setCardUpdatedOrAdded(true);
             setFlipCard(false);
             setEraserSelected(false);
             setCanvasMode(false);
@@ -83,6 +85,7 @@ export const CardControls = () => {
           body: JSON.stringify(cardData),
         })
           .then((response) => {
+            setCardUpdatedOrAdded(true);
             addToast(
               `${cardData.header}`,
               "Card added successfully, please add the next card",
