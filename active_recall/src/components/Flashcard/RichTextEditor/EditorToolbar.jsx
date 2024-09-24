@@ -120,19 +120,20 @@ export const QuillToolbar = ({ canvasMode, editMode }) => {
       </span>
       <span className="ql-formats">
         <button className="ql-link" />
-        <button className="ql-image" />
+        {/*         <button className="ql-image" />
+         */}{" "}
       </span>
       <span className="ql-formats">
         <button className="ql-code-block" />
       </span>
-      <span className="ql-formats">
+      {/*       <span className="ql-formats">
         <button className="ql-undo">
           <CustomUndo />
         </button>
         <button className="ql-redo">
           <CustomRedo />
         </button>
-      </span>
+      </span> */}
     </div>
   );
 };

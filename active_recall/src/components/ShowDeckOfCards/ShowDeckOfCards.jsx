@@ -26,7 +26,7 @@ export const ShowDeckOfCards = () => {
     setError,
   } = useContext(CardContext);
 
-  const { setPageInfo } = useContext(AppContext);
+  const { setPageInfo, setLoading } = useContext(AppContext);
 
   const authFetch = useAuthFetch();
 
@@ -38,10 +38,13 @@ export const ShowDeckOfCards = () => {
         const method = ENDPOINTS.DECKS.GET_ALL_DECKS.method;
         const response = await authFetch(url, { method });
         const data = await response.json();
+        setLoading(false);
         setAllDecks(data);
         return "";
       } catch (error) {
         console.log(error);
+        setLoading(false);
+
         setError("Error in fetching all decks for user.");
       }
     }
@@ -49,6 +52,7 @@ export const ShowDeckOfCards = () => {
       header: "Your Deck of Cards",
       info: `Select a deck to carry out a session of active recall | Edit or Remove Deck`,
     });
+    setLoading(true);
     getDeckForUser();
     setEditMode(false);
     setReviewCards(false);
@@ -61,8 +65,10 @@ export const ShowDeckOfCards = () => {
   }
 
   const handleDeckNameSelect = (deck) => {
+    setLoading(true);
     fetchCardsFromDeck(deck.deckname)
       .then((data) => {
+        setLoading(false);
         setCardsFromSelectedDeck(data);
         setDeckname(deck.deckname);
         setEditMode(false);
@@ -75,6 +81,7 @@ export const ShowDeckOfCards = () => {
       })
       .catch((error) => {
         console.log(error);
+        setLoading(false);
         setError("Failed to load the selected deck from the API response.");
       });
   };
@@ -83,6 +90,7 @@ export const ShowDeckOfCards = () => {
     event.stopPropagation();
     const url = ENDPOINTS.DECKS.DELETE_DECK_BY_ID.endpoint();
     const method = ENDPOINTS.DECKS.DELETE_DECK_BY_ID.method;
+    setLoading(true);
     authFetch(url, {
       method,
       body: JSON.stringify({
@@ -91,17 +99,22 @@ export const ShowDeckOfCards = () => {
     })
       .then((response) => {
         console.log("Deck Removed ", response);
+        setLoading(false);
+
         setAllDecks((prev) => {
           return prev.filter((each) => each.id != deckId);
         });
       })
       .catch((error) => {
         console.log(error);
+        setLoading(false);
+
         setError(`Remove Deck API call failed.`);
       });
   };
 
   const editThisDeck = (deck, event) => {
+    setLoading(true);
     event.stopPropagation();
     console.log("SELECTED DECK - deck", deck);
     fetchCardsFromDeck(deck.deckname)
@@ -112,10 +125,12 @@ export const ShowDeckOfCards = () => {
         setEditMode(true);
         setReviewCards(true);
         setFlipCard(false);
+        setLoading(false);
         navigate(`/deck-of-cards/edit/${deck.deckname}`);
       })
       .catch((error) => {
         console.log(error);
+        setLoading(false);
         setError(`Modify Deck API call failed.`);
       });
   };

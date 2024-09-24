@@ -6,9 +6,11 @@ import "../styles/rootcomponent.css";
 import { CardContextProvider } from "../contexts/card-context";
 import { AppContext } from "../contexts/app-context";
 import { Toast } from "./Toast";
+import Lottie from "lottie-react";
+import loadingAnimation from "../static/lottie/loadingAnimation.json";
 
 export const RootComponent = () => {
-  const { pageInfo, setPageInfo, toasts } = useContext(AppContext);
+  const { pageInfo, setPageInfo, toasts, isLoading } = useContext(AppContext);
 
   const location = useLocation();
 
@@ -34,6 +36,18 @@ export const RootComponent = () => {
   return (
     <CardContextProvider>
       <Navbar />
+      {isLoading && (
+        <div className="lottie_container">
+          <div>
+            <Lottie
+              loop
+              animationData={loadingAnimation}
+              style={{ width: "10rem" }}
+            ></Lottie>
+            <h2>Loading...</h2>
+          </div>
+        </div>
+      )}
       <div className="grid_container">
         <header className="grid_item">
           <h1>{pageInfo.header}</h1>

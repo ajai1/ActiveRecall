@@ -9,7 +9,7 @@ export const SignIn = () => {
   const navigate = useNavigate();
   const { userCreds, setUserCreds } = useContext(UserContext);
 
-  const { addToast } = useContext(AppContext);
+  const { addToast, setLoading } = useContext(AppContext);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -38,6 +38,7 @@ export const SignIn = () => {
   };
 
   const signInUser = async () => {
+    setLoading(true);
     try {
       const url = ENDPOINTS.USERS.SIGNIN.endpoint();
       const response = await fetch(url, {
@@ -50,6 +51,7 @@ export const SignIn = () => {
       });
       const json = await response.text();
       console.log("json is ", json, response.status);
+      setLoading(false);
       if (response.status == 401) {
         setError("User ID and Password are not matching");
       } else {
@@ -70,6 +72,7 @@ export const SignIn = () => {
         }
       }
     } catch (error) {
+      setLoading(false);
       setError("something went wrong");
     }
   };

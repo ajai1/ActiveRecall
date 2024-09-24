@@ -8,7 +8,7 @@ import { AppContext } from "../../contexts/app-context";
 export const SignUp = () => {
   const navigate = useNavigate();
 
-  const { addToast } = useContext(AppContext);
+  const { addToast, setLoading } = useContext(AppContext);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -38,6 +38,7 @@ export const SignUp = () => {
   };
 
   const createUser = async () => {
+    setLoading(true);
     try {
       const url = ENDPOINTS.USERS.CREATE_USER.endpoint();
       const response = await fetch(url, {
@@ -54,9 +55,11 @@ export const SignUp = () => {
         "user successfully registed, please sign in to continue",
         "success"
       );
+      setLoading(false);
       console.log("USER CREATED !!!");
       navigate("/signin");
     } catch (error) {
+      setLoading(false);
       addToast(
         `Not Registered`,
         "Something went wrong, please refresh/relaunch app",

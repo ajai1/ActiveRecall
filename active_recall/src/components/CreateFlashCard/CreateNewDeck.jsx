@@ -7,7 +7,7 @@ import { AppContext } from "../../contexts/app-context";
 
 export const CreateNewDeck = () => {
   const { setDeckname, setEditMode, setError } = useContext(CardContext);
-  const { setPageInfo, addToast } = useContext(AppContext);
+  const { setPageInfo, addToast, setLoading } = useContext(AppContext);
   const navigate = useNavigate();
 
   const authFetch = useAuthFetch();
@@ -27,6 +27,7 @@ export const CreateNewDeck = () => {
       return;
     }
     const url = ENDPOINTS.DECKS.CREATE_DECK.endpoint();
+    setLoading(true);
     authFetch(url, {
       method: ENDPOINTS.DECKS.CREATE_DECK.method,
       headers: HEADERS,
@@ -42,10 +43,12 @@ export const CreateNewDeck = () => {
           "Deck Created successfully",
           "success"
         );
+        setLoading(false);
         navigate(`/create/${deckNameValue}`);
       })
       .catch((error) => {
         console.log(error);
+        setLoading(false);
         setError("Create new deck API call failed.");
       });
   };

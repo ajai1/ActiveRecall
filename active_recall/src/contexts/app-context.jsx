@@ -10,6 +10,7 @@ export const AppContextProvider = ({ children }) => {
   });
 
   const [toasts, setToasts] = useState();
+  const [isLoading, setLoading] = useState(false);
   const [lastToast, setLastToast] = useState({
     header: null,
     info: null,
@@ -45,7 +46,15 @@ export const AppContextProvider = ({ children }) => {
 
   return (
     <AppContext.Provider
-      value={{ pageInfo, setPageInfo, toasts, addToast, removeToast }}
+      value={{
+        pageInfo,
+        setPageInfo,
+        toasts,
+        addToast,
+        removeToast,
+        isLoading,
+        setLoading,
+      }}
     >
       {children}
     </AppContext.Provider>

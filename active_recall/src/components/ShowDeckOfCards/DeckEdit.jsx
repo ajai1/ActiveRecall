@@ -25,7 +25,7 @@ export const DeckEdit = () => {
     addCardsSelectedFromDeck,
   } = useContext(CardContext);
 
-  const { setPageInfo } = useContext(AppContext);
+  const { setPageInfo, setLoading } = useContext(AppContext);
 
   const authFetch = useAuthFetch();
 
@@ -69,15 +69,18 @@ export const DeckEdit = () => {
     newDeck.deckname = newDeckName;
     const url = ENDPOINTS.DECKS.UPDATE_DECK_BY_ID.endpoint();
     const method = ENDPOINTS.DECKS.UPDATE_DECK_BY_ID.method;
+    setLoading(true);
     authFetch(url, {
       method,
       body: JSON.stringify(newDeck),
     })
       .then((res) => {
+        setLoading(false);
         console.log("Update done = ", res);
         setCurrentEditDeck({ ...newDeck });
       })
       .catch((error) => {
+        setLoading(false);
         console.log(error);
         setError(`Update Deck API call failed.`);
       });
@@ -85,6 +88,7 @@ export const DeckEdit = () => {
 
   useEffect(() => {
     if (params.deckname) {
+      setLoading(true);
       fetchDeckAndCards(params.deckname)
         .then(() => {
           setShouldShuffle(false);
@@ -92,9 +96,11 @@ export const DeckEdit = () => {
           setEditMode(true);
           setReviewCards(true);
           console.log("SETTED ALL CARDS AND SHUFFLE TO FALSE");
+          setLoading(false);
         })
         .catch((error) => {
           console.log(error);
+          setLoading(false);
           setError(`Fetch Deck and Cards API call failed. ${error}`);
         });
     }

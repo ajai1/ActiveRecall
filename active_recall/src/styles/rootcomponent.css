@@ -25,3 +25,22 @@
   padding: 10px 30px;
   cursor: pointer;
 }
+
+.lottie_container {
+  display: flex;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  font-size: larger;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  z-index: 100;
+  background: rgb(255 255 255 / 93%);
+  width: 20rem;
+  height: 20rem;
+  border-radius: 50%;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.256);
+}
